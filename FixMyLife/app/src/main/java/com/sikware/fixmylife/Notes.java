@@ -1,10 +1,8 @@
 package com.sikware.fixmylife;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,16 +13,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity
+public class Notes extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    CardView c1,c2,c3,c4,c5,c6;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_notes);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -34,48 +40,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        c1 = (CardView)findViewById(R.id.pantry);
-        c1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTo(v);
-            }
-        });
-        c2 = (CardView)findViewById(R.id.notes);
-        c2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTo(v);
-            }
-        });
-        c3 = (CardView)findViewById(R.id.media);
-        c3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTo(v);
-            }
-        });
-        c4 = (CardView)findViewById(R.id.chat);
-        c4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTo(v);
-            }
-        });
-        c5 = (CardView)findViewById(R.id.progress);
-        c5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTo(v);
-            }
-        });
-        c6 = (CardView)findViewById(R.id.calendar);
-        c6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTo(v);
-            }
-        });
     }
 
     @Override
@@ -91,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.notes, menu);
         return true;
     }
 
@@ -134,36 +98,4 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-    private boolean goTo(View view){
-        Intent intent = null;
-        switch(view.getTag().toString()){
-            case("Pantry"):
-                intent = new Intent(this,Pantry.class);
-                break;
-            case("Notes"):
-                intent = new Intent(this,Notes.class);
-                break;
-            case("Media"):
-                intent = new Intent(this,Media.class);
-                break;
-            case("Chat"):
-                intent = new Intent(this,Chat.class);
-                break;
-            case("Progress"):
-                intent = new Intent(this,Progress.class);
-                break;
-            case("Calendar"):
-                intent = new Intent(this,Calendar.class);
-                break;
-            default:
-                finish();
-        }
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        return true;
-    }
-
-
 }
