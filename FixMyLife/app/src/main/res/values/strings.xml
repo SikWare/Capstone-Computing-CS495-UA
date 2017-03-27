@@ -26,4 +26,6 @@
     <string name="iCantPick">I Can\'t Decide?!?!?</string>
     <string name="scan">Scan</string>
     <string name="addNew">Add New</string>
+    <string name="upComing">UpComing Releases:</string>
+    <string name="want">Want:</string>
 </resources>
