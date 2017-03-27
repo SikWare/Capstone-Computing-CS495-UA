@@ -33,4 +33,10 @@
     <string name="title">Title</string>
     <string name="chatWith">Chat With:</string>
     <string name="videoCall">Video Call</string>
+    <string name="getPoints">Get Points</string>
+    <string name="redeem">Redeem Points</string>
+    <string name="unlocked">Unlocked Rewards:</string>
+    <string name="history">History:</string>
+    <string name="importTask">Import Tasks</string>
+    <string name="taskAble">Tasks Available:</string>
 </resources>
