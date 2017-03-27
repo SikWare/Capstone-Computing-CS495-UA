@@ -28,4 +28,9 @@
     <string name="addNew">Add New</string>
     <string name="upComing">UpComing Releases:</string>
     <string name="want">Want:</string>
+    <string name="sort">Sort</string>
+    <string name="filter">Filter</string>
+    <string name="title">Title</string>
+    <string name="chatWith">Chat With:</string>
+    <string name="videoCall">Video Call</string>
 </resources>

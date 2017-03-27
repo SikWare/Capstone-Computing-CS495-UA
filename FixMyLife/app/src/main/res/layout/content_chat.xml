@@ -8,4 +8,68 @@
     tools:context="com.sikware.fixmylife.Chat"
     tools:showIn="@layout/app_bar_chat">
 
+    <RelativeLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="6dp"
+            app:srcCompat="@drawable/border" />
+
+        <TextView
+            android:id="@+id/filterChat"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_alignLeft="@+id/filterChat"
+            android:layout_alignStart="@+id/filterChat"
+            android:layout_below="@+id/imageView3"
+            android:padding="4dp"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            tools:text="@string/chatWith" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@+id/imageView3"
+            android:layout_marginLeft="65dp"
+            android:layout_marginStart="65dp"
+            android:layout_toEndOf="@+id/filterChat"
+            android:layout_toRightOf="@+id/filterChat" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignLeft="@+id/imageView3"
+            android:layout_alignStart="@+id/imageView3"
+            android:layout_below="@+id/filterChat"
+            android:background="@drawable/border"
+            android:paddingTop="8dp"
+            android:id="@+id/scrollView2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scrollView2"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:text="Button"
+            tools:text="@string/videoCall" />
+
+
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
