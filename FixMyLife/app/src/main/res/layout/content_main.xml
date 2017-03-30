@@ -10,7 +10,7 @@
     tools:showIn="@layout/app_bar_main">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageViewTop"
         android:layout_width="368dp"
         android:layout_height="40dp"
         app:srcCompat="@android:color/holo_red_light"
@@ -23,7 +23,7 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_margin="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        app:layout_constraintTop_toBottomOf="@+id/imageViewTop">
 
 
         <android.support.v7.widget.CardView
@@ -42,12 +42,13 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@mipmap/ic_launcher"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
+                    android:id="@+id/imageView1"
+                    android:layout_width="75dp"
+                    android:layout_height="65dp"
+                    app:srcCompat="@drawable/groceries"
+                    android:layout_below="@+id/textView9"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp" />
 
                 <TextView
                     android:id="@+id/textView9"
@@ -73,6 +74,19 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="111dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="75dp"
+                    android:layout_height="65dp"
+                    app:srcCompat="@drawable/notepad"
+                    android:layout_below="@+id/textView11"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,7 +94,10 @@
                 android:elevation="0dp"
                 android:text="@string/card2"
                 android:textAlignment="center"
-                android:typeface="sans" />
+                android:typeface="sans"
+                android:id="@+id/textView11" />
+            </RelativeLayout>
+
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -94,6 +111,19 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="111dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="75dp"
+                    android:layout_height="65dp"
+                    app:srcCompat="@drawable/videoplayer"
+                    android:layout_below="@+id/textView10"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,7 +131,10 @@
                 android:elevation="0dp"
                 android:text="@string/card3"
                 android:textAlignment="center"
-                android:typeface="sans" />
+                android:typeface="sans"
+                android:id="@+id/textView10" />
+            </RelativeLayout>
+
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -115,6 +148,19 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="111dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="75dp"
+                    android:layout_height="65dp"
+                    app:srcCompat="@drawable/chat"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="16dp" />
+
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
@@ -124,6 +170,8 @@
                 android:text="@string/card4"
                 android:textAlignment="center"
                 android:typeface="sans" />
+            </RelativeLayout>
+
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -137,6 +185,19 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="111dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="75dp"
+                    android:layout_height="65dp"
+                    app:srcCompat="@drawable/progresschart"
+                    android:layout_below="@+id/textView3"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp" />
+
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
@@ -146,6 +207,8 @@
                 android:text="@string/card5"
                 android:textAlignment="center"
                 android:typeface="sans" />
+            </RelativeLayout>
+
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -159,6 +222,19 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="111dp">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="75dp"
+                    android:layout_height="65dp"
+                    app:srcCompat="@drawable/calendar"
+                    android:layout_below="@+id/textView4"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp" />
+
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
@@ -168,7 +244,10 @@
                 android:text="@string/card6"
                 android:textAlignment="center"
                 android:typeface="sans" />
+            </RelativeLayout>
+
         </android.support.v7.widget.CardView>
+
     </GridLayout>
 
 

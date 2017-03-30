@@ -1,5 +1,11 @@
 package com.sikware.fixmylife;
 
+// Icons designed by { Madebyoliver } from Flaticon
+// http://www.flaticon.com/authors/madebyoliver
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+//  ||||||||||||||||||||||||||||||||||||
+//   Need to include icon author for copyrights
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
