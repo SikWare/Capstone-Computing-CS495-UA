@@ -1,0 +1,30 @@
+package com.sikware.fixmylife;
+
+import java.util.UUID;
+
+/**
+ * Created by Ken on 3/31/2017.
+ */
+
+class PantryItem {
+
+    UUID id;
+    UUID ownerID;
+    String name;
+    String type;
+    String unit;
+    String quantity;
+    Boolean isBought;
+
+    public PantryItem( UUID ownerID, String name, String type, String unit, String quantity, Boolean bought) {
+
+        this.id = new UUID.randomUUID();
+        this.ownerID = ownerID;
+        this.name = name;
+        this.type = type;
+        this.unit = unit;
+        this.quantity = quantity;
+        this.isBought = bought;
+
+    }
+}
