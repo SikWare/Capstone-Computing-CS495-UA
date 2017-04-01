@@ -14,12 +14,11 @@ class NoteItem {
     String name;
     String details;
 
-    public MediaItem( UUID ownerID, String name, String type, String details ) {
+    NoteItem( UUID ownerID, String name, String type, String details ) {
 
         this.id = new UUID.randomUUID();
         this.ownerID = ownerID;
         this.name = name;
         this.details = details;
-
     }
 }

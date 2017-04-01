@@ -39,4 +39,6 @@
     <string name="history">History:</string>
     <string name="importTask">Import Tasks</string>
     <string name="taskAble">Tasks Available:</string>
+    <string name="nameText">Name:</string>
+    <string name="quantityText">Quantity:</string>
 </resources>

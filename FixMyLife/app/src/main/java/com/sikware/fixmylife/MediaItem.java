@@ -16,7 +16,7 @@ class MediaItem {
     String platform;
     String genre;
 
-    package MediaItem( UUID ownerID, String name, String type, String platform, String genre) {
+    MediaItem( UUID ownerID, String name, String type, String platform, String genre) {
 
         this.id = new UUID.randomUUID();
         this.ownerID = ownerID;

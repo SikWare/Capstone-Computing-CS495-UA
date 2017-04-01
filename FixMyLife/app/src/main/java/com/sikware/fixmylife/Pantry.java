@@ -1,5 +1,6 @@
 package com.sikware.fixmylife;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -89,4 +90,11 @@ public class Pantry extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void addItem(View view){
+        Dialog dialog = new Dialog(this);
+        dialog.show();
+    }
+
+
 }
