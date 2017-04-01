@@ -20,13 +20,18 @@ public class TaskItem {
 
     public TaskItem(UUID ownerID, String name, String details, Date due, String assignedTo ) {
 
-        this.id = new UUID.randomUUID();
+        this.id = UUID.randomUUID();
         this.ownerID = ownerID;
         this.name = name;
         this.details = details;
         this.dueDate = due;
         this.assignedTo = assignedTo;
 
+    }
+
+    public String toString(){
+        String s = name + ";" + dueDate + ";" + assignedTo + ";" + (completed ? "Complete":"Incomplete") + ";" + (approved ? "Approved" : "Pending");
+        return s;
     }
 
 

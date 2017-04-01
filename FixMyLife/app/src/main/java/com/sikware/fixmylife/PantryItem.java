@@ -18,7 +18,7 @@ class PantryItem {
 
     public PantryItem( UUID ownerID, String name, String type, String unit, String quantity, Boolean bought) {
 
-        this.id = new UUID.randomUUID();
+        this.id = UUID.randomUUID();
         this.ownerID = ownerID;
         this.name = name;
         this.type = type;
@@ -26,5 +26,10 @@ class PantryItem {
         this.quantity = quantity;
         this.isBought = bought;
 
+    }
+
+    public String toString(){
+        String s = name + ";" + type + ";" + unit + ";" + quantity + (isBought?"x":"");
+        return s;
     }
 }

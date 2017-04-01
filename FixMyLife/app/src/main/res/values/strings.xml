@@ -6,6 +6,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="cancel">Cancel</string>
     <string name="card1">Pantry</string>
     <string name="card6">Calendar</string>
     <string name="card4">Chat</string>
@@ -41,4 +42,8 @@
     <string name="taskAble">Tasks Available:</string>
     <string name="nameText">Name:</string>
     <string name="quantityText">Quantity:</string>
+    <string name="units">Units of Measure:</string>
+    <string name="type">Type:</string>
+    <string name="have_question">Have?</string>
+    <string name="wish_question">WishList?</string>
 </resources>

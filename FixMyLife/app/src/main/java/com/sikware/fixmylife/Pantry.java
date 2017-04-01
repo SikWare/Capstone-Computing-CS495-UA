@@ -1,9 +1,14 @@
 package com.sikware.fixmylife;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +18,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
+
+import java.util.UUID;
 
 public class Pantry extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    Button addItemButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +45,13 @@ public class Pantry extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        addItemButton = (Button)findViewById(R.id.addItemBtn);
+        addItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem(v);
+            }
+        });
     }
 
     @Override
@@ -91,8 +111,38 @@ public class Pantry extends AppCompatActivity
         return true;
     }
 
-    private void addItem(View view){
-        Dialog dialog = new Dialog(this);
+    void addItem(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.add_item_layout,null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //send data back from dialog
+                AlertDialog a = (AlertDialog) dialog;
+                Context context = getApplicationContext();
+                EditText Ename = (EditText)a.findViewById(R.id.nameTextItem);
+                String name = Ename.getText().toString();
+                String type = ((EditText)a.findViewById(R.id.typeTextItem)).getText().toString();
+                String unit = ((EditText)a.findViewById(R.id.unitTextItem)).getText().toString();
+                String quantity = ((EditText)a.findViewById(R.id.qtyTextItem)).getText().toString();
+                boolean bought = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()?true:false;
+                //PantryItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
+                Global.pantryItem = new PantryItem(Global.getUser().groupID,name,type,unit,quantity,bought);
+                Log.d("item",Global.pantryItem.toString());
+                //after creating item we set to global to keep in memory
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Global.pantryItem = null;
+                dialog.cancel();
+                //
+                // if we cancel we clear global item so
+                // we know we have canceled the window
+                //
+            }
+        }).setTitle(R.string.addNew);
+        AlertDialog dialog = builder.create();
         dialog.show();
     }
 

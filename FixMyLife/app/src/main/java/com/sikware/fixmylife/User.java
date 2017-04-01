@@ -18,9 +18,9 @@ class User {
 
     public User (String name, String email, UUID groupID, int privLvl) {
 
+        this.userID = UUID.randomUUID();
         this.name = name;
         this.email = email;
-        this.userID = new UUID.randomUUID();
         this.groupID = groupID;
 
         switch (privLvl) {

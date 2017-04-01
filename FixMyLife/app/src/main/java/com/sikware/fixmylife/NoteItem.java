@@ -14,11 +14,17 @@ class NoteItem {
     String name;
     String details;
 
-    NoteItem( UUID ownerID, String name, String type, String details ) {
+    public NoteItem( UUID ownerID, String name, String type, String details ) {
 
-        this.id = new UUID.randomUUID();
+        this.id = UUID.randomUUID();
         this.ownerID = ownerID;
         this.name = name;
         this.details = details;
     }
+
+    public String toString(){
+        String s = name + ";" + details;
+        return s;
+    }
+
 }
