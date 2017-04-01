@@ -3,6 +3,7 @@ package com.sikware.fixmylife;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,7 +29,7 @@ import java.util.UUID;
 public class Pantry extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    Button addItemButton;
+    Button addItemButton,scanItemButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,15 @@ public class Pantry extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        scanItemButton = (Button)findViewById(R.id.scanItemButton);
+        scanItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanItem(v);
+            }
+        });
         addItemButton = (Button)findViewById(R.id.addItemBtn);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +63,7 @@ public class Pantry extends AppCompatActivity
             }
         });
     }
+
 
     @Override
     public void onBackPressed() {
@@ -144,6 +155,20 @@ public class Pantry extends AppCompatActivity
         }).setTitle(R.string.addNew);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void scanItem(View v) {
+        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_STARTED);
+        startActivityForResult(scanIntent, RESULT_OK);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Intent scanResult = intent;
+        if (scanResult != null) {
+            // handle scan result
+        }
+        // else continue with any other code you need in the method
+
     }
 
 
