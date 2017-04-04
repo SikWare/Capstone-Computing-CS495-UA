@@ -13,6 +13,7 @@ class Global extends Application {
     static User u = new User("bob", "sikwarefromthatguy@gmail.com", UUID.randomUUID(), 0);
 
     static PantryItem pantryItem = null;
+    static MediaItem mediaItem = null;
 
 
     // this is the only place we should do this for security reasons
