@@ -1,4 +1,4 @@
-package com.sikware.fixmylife;
+package com.sikware.FixMyLife;
 
 import android.app.Application;
 
@@ -11,6 +11,7 @@ import java.util.UUID;
 class Global extends Application {
     // bob is just for testing purposes
     static User u = new User("bob", "sikwarefromthatguy@gmail.com", UUID.randomUUID(), 0);
+
 
     static PantryItem pantryItem = null;
     static MediaItem mediaItem = null;

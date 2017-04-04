@@ -1,7 +1,5 @@
 
-package com.sikware.fixmylife;
-
-import android.support.annotation.NonNull;
+package com.sikware.FixMyLife;
 
 import java.util.UUID;
 

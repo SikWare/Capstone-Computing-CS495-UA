@@ -1,5 +1,5 @@
 
-package com.sikware.fixmylife;
+package com.sikware.FixMyLife;
 
 import java.util.UUID;
 

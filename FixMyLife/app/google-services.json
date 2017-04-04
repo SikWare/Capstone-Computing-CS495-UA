@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "694048456092",
+    "project_id": "firebase-fixmylife"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694048456092:android:24c0ab2bf423a2df",
+        "android_client_info": {
+          "package_name": "com.sikware.FixMyLife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "694048456092-0rto0gu6r22gcsneh993kt0ghavg2bdk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sikware.FixMyLife",
+            "certificate_hash": "72e4b9cfc2466a2768cefe366dec35d0d883c2db"
+          }
+        },
+        {
+          "client_id": "694048456092-ka73lu6rlg4a5lkitne0h81u1rmuq6ka.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBLArpJPI5985Cp69GCW1EMZgXerpZ8X8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

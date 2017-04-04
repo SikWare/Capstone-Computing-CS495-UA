@@ -1,4 +1,4 @@
-package com.sikware.fixmylife;
+package com.sikware.FixMyLife;
 
 import org.junit.Test;
 
