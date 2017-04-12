@@ -1,25 +1,33 @@
 {
   "project_info": {
-    "project_number": "694048456092",
-    "project_id": "firebase-fixmylife"
+    "project_number": "692046839014",
+    "project_id": "fml-by-sikware"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:694048456092:android:24c0ab2bf423a2df",
+        "mobilesdk_app_id": "1:692046839014:android:f065ff0315e39510",
         "android_client_info": {
           "package_name": "com.sikware.FixMyLife"
         }
       },
       "oauth_client": [
         {
-          "client_id": "694048456092-ka73lu6rlg4a5lkitne0h81u1rmuq6ka.apps.googleusercontent.com",
+          "client_id": "692046839014-l7ppaae4itk3stv45qmdai3hcu7i58ov.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sikware.FixMyLife",
+            "certificate_hash": "e74087b6a42bb118f0e66330b9018ae56fef49f6"
+          }
+        },
+        {
+          "client_id": "692046839014-d934e1mg7kq9sjkchkdmt1bpsb3alpmh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBBLArpJPI5985Cp69GCW1EMZgXerpZ8X8"
+          "current_key": "AIzaSyA-HTHQLInW5ZL7RHTghf7D19XXTU5TlEk"
         }
       ],
       "services": {

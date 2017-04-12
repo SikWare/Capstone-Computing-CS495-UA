@@ -38,13 +38,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        c1 = (CardView)findViewById(R.id.pantry);
-        c1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTo(v);
-            }
-        });
+
+
         c2 = (CardView)findViewById(R.id.notes);
         c2.setOnClickListener(new View.OnClickListener() {
             @Override
