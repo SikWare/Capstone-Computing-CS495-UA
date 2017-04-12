@@ -1,0 +1,37 @@
+main keystore = capstoneKeystore.jks
+pswrd = ThIsIsMyPaSsWoRd
+
+alias = capstone
+pswrd = capstone
+
+fisrt and last name = Thomas Anderson
+org unit = Sikware devs
+org = Sikware
+city = t-town
+state = AL
+Country Code = US
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\Aime1>cd C:\Users\Aime1\.AndroidStudio2.2\system\restart\jre\bin
+
+C:\Users\Aime1\.AndroidStudio2.2\system\restart\jre\bin>keytool -exportcert -key
+store C:\Users\Aime1\Git\Capstone-Computing-CS495-UA\capstoneKeystore.jks -list
+-v
+Enter keystore password:
+
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+Alias name: capstone
+Creation date: Apr 12, 2017
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=Thomas Anderson, OU=Sikware devs, O=Sikware, L=t-town, ST=AL, C=US
+Issuer: CN=Thomas Anderson, OU=Sikware devs, O=Sikware, L=t-town, ST=AL, C=US
+Serial number: 7a1c9889
+Valid from: Wed Apr 12 12:22:20 CDT 2017 until: Sun Apr 06 12:22:20 CDT 2042
+3B:40:E5:E4:ED:4A:BC:33:65:88:78:18:B0:C5:97:B2:23:6A:1B:60

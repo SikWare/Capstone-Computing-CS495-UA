@@ -1,6 +1,7 @@
 package com.sikware.FixMyLife;
 
 import android.content.Intent;
+import android.content.IntentSender;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -54,6 +56,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void signIn(){
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -67,8 +70,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 0).show();
     }
+
 
     private void handleSignInResult(GoogleSignInResult result){
         Log.d(TAG, "handleSignInResult: " + result.isSuccess());
@@ -76,9 +81,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             GoogleSignInAccount acct = result.getSignInAccount();
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             //updateUI(true);
+            }
             Intent intent = new Intent(this,MainActivity.class);
             startActivity(intent);
             finish();
-        }
     }
 }

@@ -48,4 +48,5 @@
     <string name="wish_question">WishList?</string>
     <string name="signed_in_fmt">Signed in as: %s</string>
     <string name="sign_in_with">Google Sign In</string>
+    <string name="server_client_id">694048456092-ka73lu6rlg4a5lkitne0h81u1rmuq6ka.apps.googleusercontent.com </string>
 </resources>
