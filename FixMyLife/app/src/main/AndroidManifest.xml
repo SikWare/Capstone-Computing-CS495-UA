@@ -3,6 +3,8 @@
     package="com.sikware.FixMyLife">
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <application
         android:allowBackup="true"
@@ -55,6 +57,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LoginActivity"></activity>
+        <service
+            android:name="AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+        <provider
+            android:name="StubProvider"
+            android:authorities="com.sikware.FixMyLife.provider"
+            android:exported="false"
+            android:syncable="true"/>
     </application>
 
 </manifest>

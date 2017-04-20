@@ -19,6 +19,8 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import static com.sikware.FixMyLife.Global.acct;
+
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -77,13 +79,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void handleSignInResult(GoogleSignInResult result){
         Log.d(TAG, "handleSignInResult: " + result.isSuccess());
-        if(result.isSuccess()){
-            GoogleSignInAccount acct = result.getSignInAccount();
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+        if(result.isSuccess()) {
+            acct = result.getSignInAccount();
+            Log.d(TAG, "Name: " + acct.getDisplayName());
+            Log.d(TAG, "Email: " + acct.getEmail());
             //updateUI(true);
-            }
-            Intent intent = new Intent(this,MainActivity.class);
+            //}
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
+        }
     }
 }

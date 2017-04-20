@@ -1,7 +1,11 @@
 package com.sikware.FixMyLife;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.icu.util.Freezable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -15,14 +19,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.TextView;
+
+import static com.sikware.FixMyLife.Global.mDbHelper;
+import com.sikware.FixMyLife.FeedReaderContract.FeedEntry;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class Media extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Button addMediaBtn;
+    ListView mediaHave, mediaWant;
+    SQLiteDatabase db;
+    ArrayList<String> resultsH = new ArrayList<String>();
+    ArrayList<String> resultsW = new ArrayList<String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +65,11 @@ public class Media extends AppCompatActivity
                 addItem(v);
             }
         });
+
+        db = mDbHelper.getWritableDatabase();
+
+        loadLists();
+
     }
 
 
@@ -114,8 +137,12 @@ public class Media extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //send data back from dialog
+
+                // Gets the data repository in write mode
+                ContentValues values = new ContentValues();
+
                 AlertDialog a = (AlertDialog) dialog;
-                Context context = getApplicationContext();
+//                Context context = getApplicationContext();
                 EditText Ename = (EditText)a.findViewById(R.id.mediaNameItem);
                 String name = Ename.getText().toString();
                 String type = ((EditText)a.findViewById(R.id.mediaTypeItem)).getText().toString();
@@ -124,8 +151,20 @@ public class Media extends AppCompatActivity
                 boolean bought = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()?true:false;
                 //MediaItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
                 Global.mediaItem = new MediaItem(Global.getUser().groupID,name,type,platform,genre,bought);
-                Log.d("item",Global.mediaItem.toString());
                 //after creating item we set to global to keep in memory
+                Log.d("item",Global.mediaItem.toString());
+                values.put(FeedEntry._ID, Global.mediaItem.id.toString());
+                values.put(FeedEntry.COLUMN_NAME, name);
+                values.put(FeedEntry.COLUMN_OWNER_ID, Global.getUser().groupID.toString());
+                values.put(FeedEntry.COLUMN_TYPE, type);
+                values.put(FeedEntry.COLUMN_PLATFORM, platform);
+                values.put(FeedEntry.COLUMN_GENRE, genre);
+                values.put(FeedEntry.COLUMN_GENRE, (bought ? 1 : 0));
+
+                long newRowId = db.insert(FeedEntry.TABLE_NAME_MEDIA, null, values);// the null here is default for column value
+                //after creating item add to db
+                Log.d("item","NewRowId: " + newRowId);
+
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
@@ -141,4 +180,52 @@ public class Media extends AppCompatActivity
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    private void loadLists(){
+
+        Cursor have = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 1" ,null);
+        mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
+        if (have != null ) {
+            if  (have.moveToFirst()) {
+                do {
+                    String name = have.getString(have.getColumnIndex(FeedEntry.COLUMN_NAME));
+                    String quatity = have.getString(have.getColumnIndex(FeedEntry.COLUMN_QUANTITY));
+                    String unit = have.getString(have.getColumnIndex(FeedEntry.COLUMN_UNIT));
+                    String platform = have.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
+                    String genre = have.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
+                    resultsH.add(name + " " + quatity + " " + unit + " " + platform + " " + genre);
+                }while (have.moveToNext());
+            }
+        }
+
+        Cursor want = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 0" ,null);
+        mediaWant = (ListView)findViewById(R.id.mediaWantListView);
+        if (want != null ) {
+            //if  (want.moveToFirst()) {
+                do {
+                    String name = want.getString(have.getColumnIndex(FeedEntry.COLUMN_NAME));
+                    String quatity = want.getString(have.getColumnIndex(FeedEntry.COLUMN_QUANTITY));
+                    String unit = want.getString(have.getColumnIndex(FeedEntry.COLUMN_UNIT));
+                    String platform = want.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
+                    String genre = want.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
+                    resultsH.add(name + " " + quatity + " " + unit + " " + platform + " " + genre);
+                }while (want.moveToNext());
+            //}
+        }
+
+
+
+    }
+
+    private void displayResultList() {
+        mediaHave.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, resultsH));
+        mediaHave.setTextFilterEnabled(true);
+
+        mediaWant.setAdapter(new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, resultsH));
+        mediaWant.setTextFilterEnabled(true);
+
+    }
+
 }

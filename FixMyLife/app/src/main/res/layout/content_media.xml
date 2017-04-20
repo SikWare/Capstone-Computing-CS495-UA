@@ -86,10 +86,10 @@
             android:layout_height="150dp"
             android:background="@drawable/border">
 
-            <LinearLayout
+            <ListView
+                android:id="@+id/mediaHaveListView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content" />
         </ScrollView>
 
         <RelativeLayout
@@ -136,10 +136,10 @@
             android:layout_height="150dp"
             android:background="@drawable/border">
 
-            <LinearLayout
+            <ListView
+                android:id="@+id/mediaWantListView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:layout_height="wrap_content" />
         </ScrollView>
 
         <LinearLayout

@@ -6,8 +6,11 @@ package com.sikware.FixMyLife;
 //  ||||||||||||||||||||||||||||||||||||
 //   Need to include icon author for copyrights
 
+import android.content.ContentUris;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -40,6 +43,13 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        c1 = (CardView)findViewById(R.id.pantry);
+        c1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goTo(v);
+            }
+        });
         c2 = (CardView)findViewById(R.id.notes);
         c2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +164,13 @@ public class MainActivity extends AppCompatActivity
                 intent = new Intent(this,Progress.class);
                 break;
             case("Calendar"):
-                intent = new Intent(this,Calendar.class);
+                long startMillis = System.currentTimeMillis();
+                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+                builder.appendPath("time");
+                ContentUris.appendId(builder, startMillis);
+                intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+                startActivity(intent);
+//                intent = new Intent(this,Calendar.class);
                 break;
             default:
                 finish();

@@ -11,6 +11,8 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Global.mDbHelper = new DBHelper(getApplicationContext());
+
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();

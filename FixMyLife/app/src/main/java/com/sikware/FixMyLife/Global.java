@@ -2,6 +2,8 @@ package com.sikware.FixMyLife;
 
 import android.app.Application;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 import java.util.UUID;
 
 /**
@@ -15,7 +17,8 @@ class Global extends Application {
 
     static PantryItem pantryItem = null;
     static MediaItem mediaItem = null;
-
+    static GoogleSignInAccount acct;
+    static DBHelper mDbHelper;
 
     // this is the only place we should do this for security reasons
     //|||||||||||||
