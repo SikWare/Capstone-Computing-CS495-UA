@@ -84,10 +84,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Log.d(TAG, "Name: " + acct.getDisplayName());
             Log.d(TAG, "Email: " + acct.getEmail());
             //updateUI(true);
-            //}
+            }
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
-        }
+        //}
     }
 }

@@ -164,6 +164,7 @@ public class Media extends AppCompatActivity
                 long newRowId = db.insert(FeedEntry.TABLE_NAME_MEDIA, null, values);// the null here is default for column value
                 //after creating item add to db
                 Log.d("item","NewRowId: " + newRowId);
+                loadLists();
 
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -182,8 +183,11 @@ public class Media extends AppCompatActivity
     }
 
     private void loadLists(){
+        if(db.isOpen()== false){
+            db.openOrCreateDatabase(FeedEntry.DATABASE_NAME,null);
+        }
 
-        String[] columns = new String[]{FeedEntry.COLUMN_NAME, FeedEntry.COLUMN_QUANTITY, FeedEntry.COLUMN_UNIT, FeedEntry.COLUMN_PLATFORM, FeedEntry.COLUMN_GENRE, FeedEntry.COLUMN_BOUGHT};
+        String[] columns = new String[]{FeedEntry.COLUMN_NAME, FeedEntry.COLUMN_OWNER_ID, FeedEntry.COLUMN_TYPE, FeedEntry.COLUMN_PLATFORM, FeedEntry.COLUMN_GENRE, FeedEntry.COLUMN_BOUGHT};
         Cursor have = db.query(FeedEntry.TABLE_NAME_MEDIA, columns,
                 null, null, null, null, null);
 
@@ -194,36 +198,20 @@ public class Media extends AppCompatActivity
             if  (have.moveToFirst()) {
                 do {
                     String name = have.getString(have.getColumnIndex(FeedEntry.COLUMN_NAME));
-                    String quatity = have.getString(have.getColumnIndex(FeedEntry.COLUMN_QUANTITY));
-                    String unit = have.getString(have.getColumnIndex(FeedEntry.COLUMN_UNIT));
+                    String owner = have.getString(have.getColumnIndex(FeedEntry.COLUMN_OWNER_ID));
+                    String type = have.getString(have.getColumnIndex(FeedEntry.COLUMN_TYPE));
                     String platform = have.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
                     String genre = have.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
                     if(have.getInt(have.getColumnIndex(FeedEntry.COLUMN_BOUGHT))==1){
-                        resultsH.add(name + " " + quatity + " " + unit + " " + platform + " " + genre);
+                        resultsH.add(name + " " + owner + " " + type + " " + platform + " " + genre);
                     }
                     else{
-                        resultsW.add(name + " " + quatity + " " + unit + " " + platform + " " + genre);
+                        resultsW.add(name + " " + owner + " " + type + " " + platform + " " + genre);
                     }
                 }while (have.moveToNext());
             }
         }
-
-/*        Cursor want = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 0" ,null);
-        mediaWant = (ListView)findViewById(R.id.mediaWantListView);
-        if (want != null ) {
-            //if  (want.moveToFirst()) {
-                do {
-                    String name = want.getString(have.getColumnIndex(FeedEntry.COLUMN_NAME));
-                    String quatity = want.getString(have.getColumnIndex(FeedEntry.COLUMN_QUANTITY));
-                    String unit = want.getString(have.getColumnIndex(FeedEntry.COLUMN_UNIT));
-                    String platform = want.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
-                    String genre = want.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
-                    resultsH.add(name + " " + quatity + " " + unit + " " + platform + " " + genre);
-                }while (want.moveToNext());
-            //}
-        }
-*/
-
+        displayResultList();
 
     }
 
