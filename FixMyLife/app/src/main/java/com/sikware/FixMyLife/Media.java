@@ -183,8 +183,13 @@ public class Media extends AppCompatActivity
 
     private void loadLists(){
 
-        Cursor have = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 1" ,null);
+        String[] columns = new String[]{FeedEntry.COLUMN_NAME, FeedEntry.COLUMN_QUANTITY, FeedEntry.COLUMN_UNIT, FeedEntry.COLUMN_PLATFORM, FeedEntry.COLUMN_GENRE, FeedEntry.COLUMN_BOUGHT};
+        Cursor have = db.query(FeedEntry.TABLE_NAME_MEDIA, columns,
+                null, null, null, null, null);
+
+        //Cursor have = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 1" ,null);
         mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
+        mediaWant = (ListView)findViewById(R.id.mediaWantListView);
         if (have != null ) {
             if  (have.moveToFirst()) {
                 do {
@@ -193,12 +198,17 @@ public class Media extends AppCompatActivity
                     String unit = have.getString(have.getColumnIndex(FeedEntry.COLUMN_UNIT));
                     String platform = have.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
                     String genre = have.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
-                    resultsH.add(name + " " + quatity + " " + unit + " " + platform + " " + genre);
+                    if(have.getInt(have.getColumnIndex(FeedEntry.COLUMN_BOUGHT))==1){
+                        resultsH.add(name + " " + quatity + " " + unit + " " + platform + " " + genre);
+                    }
+                    else{
+                        resultsW.add(name + " " + quatity + " " + unit + " " + platform + " " + genre);
+                    }
                 }while (have.moveToNext());
             }
         }
 
-        Cursor want = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 0" ,null);
+/*        Cursor want = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 0" ,null);
         mediaWant = (ListView)findViewById(R.id.mediaWantListView);
         if (want != null ) {
             //if  (want.moveToFirst()) {
@@ -212,7 +222,7 @@ public class Media extends AppCompatActivity
                 }while (want.moveToNext());
             //}
         }
-
+*/
 
 
     }
