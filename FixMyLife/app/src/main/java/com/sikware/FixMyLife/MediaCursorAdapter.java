@@ -29,9 +29,9 @@ public class MediaCursorAdapter extends CursorAdapter {
         TextView platform = (TextView) view.findViewById(R.id.platform);
         TextView genre = (TextView) view.findViewById(R.id.genre);
         // Extract properties from cursor
-        String nameText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_NAME);
+        String nameText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_NAME));
         String platformText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_PLATFORM));
-        String genreText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_GENRE);
+        String genreText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_GENRE));
         // Populate fields with extracted properties
         name.setText(nameText);
         platform.setText(String.valueOf(platformText));
