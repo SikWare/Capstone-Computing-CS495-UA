@@ -49,7 +49,7 @@
                 android:text="@string/have" />
 
             <TextView
-                android:id="@+id/qtyPantry"
+                android:id="@+id/qtyMedia"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -63,7 +63,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="43dp"
                 android:layout_marginStart="43dp"
-                android:layout_toRightOf="@+id/qtyPantry"
+                android:layout_toRightOf="@+id/qtyMedia"
                 android:text="@string/unit" />
 
             <TextView

@@ -37,11 +37,11 @@ public final class FeedReaderContract {
         public static final String SQL_CREATE_MEDIA_TABLE =
                 "CREATE TABLE " + TABLE_NAME_MEDIA + " (" +
                         _ID + " TEXT PRIMARY KEY," +
-                        COLUMN_NAME + " TEXT," +
+                        COLUMN_NAME + " TEXT," + // 1
                         COLUMN_OWNER_ID + " TEXT," +
                         COLUMN_TYPE + " TEXT," +
-                        COLUMN_PLATFORM + " TEXT," +
-                        COLUMN_GENRE + " TEXT," +
+                        COLUMN_PLATFORM + " TEXT," + // 2
+                        COLUMN_GENRE + " TEXT," + // 3
                         COLUMN_BOUGHT + " INTEGER" +
                         ")";
 

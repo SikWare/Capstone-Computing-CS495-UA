@@ -43,43 +43,36 @@
                 android:text="@string/filter" />
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/havePantry"
-                android:layout_width="wrap_content"
+                android:id="@+id/haveMedia"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/have" />
 
             <TextView
-                android:id="@+id/qtyPantry"
-                android:layout_width="wrap_content"
+                android:id="@+id/qtyMedia"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:text="@string/quantity" />
+                android:layout_alignParentTop="false"
+                android:layout_centerHorizontal="false"
+                android:layout_weight="1"
+                android:text="@string/platform" />
 
             <TextView
-                android:id="@+id/unitPantry"
-                android:layout_width="wrap_content"
+                android:id="@+id/priorMedia"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="43dp"
-                android:layout_marginStart="43dp"
-                android:layout_toRightOf="@+id/qtyPantry"
-                android:text="@string/unit" />
-
-            <TextView
-                android:id="@+id/priorPantry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:text="@string/priority" />
-        </RelativeLayout>
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignParentTop="false"
+                android:layout_weight="1"
+                android:text="@string/genre" />
+        </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -92,44 +85,36 @@
                 android:layout_height="wrap_content" />
         </ScrollView>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/havePantry2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/want" />
 
             <TextView
                 android:id="@+id/qtyPantry2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_alignParentTop="false"
                 android:layout_centerHorizontal="true"
-                android:text="@string/quantity" />
-
-            <TextView
-                android:id="@+id/unitPantry2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="43dp"
-                android:layout_marginStart="43dp"
-                android:layout_toEndOf="@+id/qtyPantry2"
-                android:layout_toRightOf="@+id/qtyPantry2"
-                android:text="@string/unit" />
+                android:layout_weight="1"
+                android:text="@string/platform" />
 
             <TextView
                 android:id="@+id/prioPantry2"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:text="@string/priority" />
-        </RelativeLayout>
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignParentTop="false"
+                android:layout_weight="1"
+                android:text="@string/genre" />
+        </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"

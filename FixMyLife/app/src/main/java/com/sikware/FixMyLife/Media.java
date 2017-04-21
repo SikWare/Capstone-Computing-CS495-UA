@@ -153,6 +153,7 @@ public class Media extends AppCompatActivity
                 Global.mediaItem = new MediaItem(Global.getUser().groupID,name,type,platform,genre,bought);
                 //after creating item we set to global to keep in memory
                 Log.d("item",Global.mediaItem.toString());
+                //make Query
                 values.put(FeedEntry._ID, Global.mediaItem.id.toString());
                 values.put(FeedEntry.COLUMN_NAME, name);
                 values.put(FeedEntry.COLUMN_OWNER_ID, Global.getUser().groupID.toString());
@@ -187,43 +188,19 @@ public class Media extends AppCompatActivity
             db.openOrCreateDatabase(FeedEntry.DATABASE_NAME,null);
         }
 
-        String[] columns = new String[]{FeedEntry.COLUMN_NAME, FeedEntry.COLUMN_OWNER_ID, FeedEntry.COLUMN_TYPE, FeedEntry.COLUMN_PLATFORM, FeedEntry.COLUMN_GENRE, FeedEntry.COLUMN_BOUGHT};
-        Cursor have = db.query(FeedEntry.TABLE_NAME_MEDIA, columns,
-                null, null, null, null, null);
-
-        //Cursor have = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 1" ,null);
+        Cursor haveCursor = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 1" ,null);
         mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
+        MediaCursorAdapter mediaAdapterH = new MediaCursorAdapter(this, haveCursor);
+        mediaHave.setAdapter(mediaAdapterH);
+        // if we want to change items in list view we do this
+        //mediaAdapter.changeCursor(newCursor);
+        Cursor wantCursor = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 0" ,null);
         mediaWant = (ListView)findViewById(R.id.mediaWantListView);
-        if (have != null ) {
-            if  (have.moveToFirst()) {
-                do {
-                    String name = have.getString(have.getColumnIndex(FeedEntry.COLUMN_NAME));
-                    String owner = have.getString(have.getColumnIndex(FeedEntry.COLUMN_OWNER_ID));
-                    String type = have.getString(have.getColumnIndex(FeedEntry.COLUMN_TYPE));
-                    String platform = have.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
-                    String genre = have.getString(have.getColumnIndex(FeedEntry.COLUMN_PLATFORM));
-                    if(have.getInt(have.getColumnIndex(FeedEntry.COLUMN_BOUGHT))==1){
-                        resultsH.add(name + " " + owner + " " + type + " " + platform + " " + genre);
-                    }
-                    else{
-                        resultsW.add(name + " " + owner + " " + type + " " + platform + " " + genre);
-                    }
-                }while (have.moveToNext());
-            }
-        }
-        displayResultList();
+        MediaCursorAdapter mediaAdapterW = new MediaCursorAdapter(this, wantCursor);
+        mediaHave.setAdapter(mediaAdapterW);
 
     }
 
-    private void displayResultList() {
-        mediaHave.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, resultsH));
-        mediaHave.setTextFilterEnabled(true);
 
-        mediaWant.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, resultsH));
-        mediaWant.setTextFilterEnabled(true);
-
-    }
 
 }

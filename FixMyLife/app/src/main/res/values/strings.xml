@@ -51,4 +51,6 @@
     <string name="btn_logout_from_google">G+ Login</string>
     <string name="btn_revoke_access">Revoke Access</string>
     <string name="server_client_id">694048456092-ka73lu6rlg4a5lkitne0h81u1rmuq6ka.apps.googleusercontent.com </string>
+    <string name="platform">Platform:</string>
+    <string name="genre">Genre:</string>
 </resources>
