@@ -21,16 +21,22 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(FeedEntry.SQL_CREATE_MEDIA_TABLE);
-        db.execSQL(FeedEntry.SQL_CREATE_PANTRY_TABLE);
-        db.execSQL(FeedEntry.SQL_CREATE_NOTES_TABLE);
+        db.execSQL(FeedEntry.SQL_CREATE_MEDIA_TABLE_H);
+        db.execSQL(FeedEntry.SQL_CREATE_MEDIA_TABLE_W);
+        db.execSQL(FeedEntry.SQL_CREATE_PANTRY_TABLE_H);
+        db.execSQL(FeedEntry.SQL_CREATE_PANTRY_TABLE_W);
+        db.execSQL(FeedEntry.SQL_CREATE_NOTES_TABLE_H);
+        db.execSQL(FeedEntry.SQL_CREATE_NOTES_TABLE_W);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(FeedEntry.SQL_DELETE_MEDIA_TABLE);
-        db.execSQL(FeedEntry.SQL_DELETE_PANTRY_TABLE);
-        db.execSQL(FeedEntry.SQL_DELETE_NOTES_TABLE);
+        db.execSQL(FeedEntry.SQL_DELETE_MEDIA_TABLE_H);
+        db.execSQL(FeedEntry.SQL_DELETE_MEDIA_TABLE_W);
+        db.execSQL(FeedEntry.SQL_DELETE_PANTRY_TABLE_H);
+        db.execSQL(FeedEntry.SQL_DELETE_PANTRY_TABLE_W);
+        db.execSQL(FeedEntry.SQL_DELETE_NOTES_TABLE_H);
+        db.execSQL(FeedEntry.SQL_DELETE_NOTES_TABLE_W);
         onCreate(db);
     }
 

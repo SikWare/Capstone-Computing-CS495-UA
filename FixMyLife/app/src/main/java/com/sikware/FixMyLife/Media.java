@@ -1,11 +1,9 @@
 package com.sikware.FixMyLife;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.icu.util.Freezable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -24,10 +22,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
-import static com.sikware.FixMyLife.Global.mDbHelper;
 import com.sikware.FixMyLife.FeedReaderContract.FeedEntry;
 
-import java.util.ArrayList;
 
 public class Media extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -157,8 +153,14 @@ public class Media extends AppCompatActivity
                 values.put(FeedEntry.COLUMN_GENRE, genre);
                 values.put(FeedEntry.COLUMN_GENRE, bought);
 
-                long newRowId = db.insert(FeedEntry.TABLE_NAME_MEDIA, null, values);// the null here is default for column value
                 //after creating item add to db
+                long newRowId =
+                        // bear with me
+                        ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()
+                        ?
+                        db.insert(FeedEntry.TABLE_NAME_MEDIA_HAVE, null, values)
+                        :
+                        db.insert(FeedEntry.TABLE_NAME_MEDIA_WANT, null, values);// the null here is default for column value
                 Log.d("item","NewRowId: " + newRowId);
                 loadLists();
 
@@ -183,17 +185,21 @@ public class Media extends AppCompatActivity
             db.openOrCreateDatabase(FeedEntry.DATABASE_NAME,null);
         }
 
-        String query = "SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " like ?";
-        Cursor haveCursor = db.rawQuery(query, new String[]{"'%x%'"});
-        mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
+        Cursor haveCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEADIA_HAVE, null);
         MediaCursorAdapter mediaAdapterH = new MediaCursorAdapter(this, R.layout.media_item_view,haveCursor);
+
+        mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
         mediaHave.setAdapter(mediaAdapterH);
+
         // if we want to change items in list view we do this
         mediaAdapterH.changeCursor(haveCursor);
-        Cursor wantCursor = db.rawQuery(query, new String[]{"'%o%'"});
-        mediaWant = (ListView)findViewById(R.id.mediaWantListView);
+
+        Cursor wantCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEDIA_WANT, null);
         MediaCursorAdapter mediaAdapterW = new MediaCursorAdapter(this, R.layout.media_item_view,wantCursor);
+
+        mediaWant = (ListView)findViewById(R.id.mediaWantListView);
         mediaWant.setAdapter(mediaAdapterW);
+
         mediaAdapterW.changeCursor(wantCursor);
 
     }
