@@ -15,9 +15,9 @@ class MediaItem {
     String type;
     String platform;
     String genre;
-    Boolean isBought;
+    String isBought;
 
-    public MediaItem( UUID ownerID, String name, String type, String platform, String genre, Boolean bought) {
+    public MediaItem( UUID ownerID, String name, String type, String platform, String genre, String bought) {
 
         this.id = UUID.randomUUID();
         this.ownerID = ownerID;
@@ -31,7 +31,7 @@ class MediaItem {
     }
 
     public String toString(){
-        String s = name + ";" + type + ";" + platform + ";" + genre + (isBought?"x":"");
+        String s = name + ";" + type + ";" + platform + ";" + genre + ";" + isBought;
         return s;
     }
 

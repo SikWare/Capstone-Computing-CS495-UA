@@ -19,18 +19,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import static com.sikware.FixMyLife.Global.mDbHelper;
 import com.sikware.FixMyLife.FeedReaderContract.FeedEntry;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Media extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,8 +35,6 @@ public class Media extends AppCompatActivity
     Button addMediaBtn;
     ListView mediaHave, mediaWant;
     SQLiteDatabase db;
-    ArrayList<String> resultsH = new ArrayList<String>();
-    ArrayList<String> resultsW = new ArrayList<String>();
 
 
     @Override
@@ -66,7 +61,7 @@ public class Media extends AppCompatActivity
             }
         });
 
-        db = mDbHelper.getWritableDatabase();
+        db = Global.mDbHelper.getWritableDatabase();
 
         loadLists();
 
@@ -148,7 +143,7 @@ public class Media extends AppCompatActivity
                 String type = ((EditText)a.findViewById(R.id.mediaTypeItem)).getText().toString();
                 String platform = ((EditText)a.findViewById(R.id.mediaPlatformItem)).getText().toString();
                 String genre = ((EditText)a.findViewById(R.id.mediaGenreItem)).getText().toString();
-                boolean bought = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()?true:false;
+                String bought = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()?"x":"o";
                 //MediaItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
                 Global.mediaItem = new MediaItem(Global.getUser().groupID,name,type,platform,genre,bought);
                 //after creating item we set to global to keep in memory
@@ -160,7 +155,7 @@ public class Media extends AppCompatActivity
                 values.put(FeedEntry.COLUMN_TYPE, type);
                 values.put(FeedEntry.COLUMN_PLATFORM, platform);
                 values.put(FeedEntry.COLUMN_GENRE, genre);
-                values.put(FeedEntry.COLUMN_GENRE, (bought ? 1 : 0));
+                values.put(FeedEntry.COLUMN_GENRE, bought);
 
                 long newRowId = db.insert(FeedEntry.TABLE_NAME_MEDIA, null, values);// the null here is default for column value
                 //after creating item add to db
@@ -188,16 +183,18 @@ public class Media extends AppCompatActivity
             db.openOrCreateDatabase(FeedEntry.DATABASE_NAME,null);
         }
 
-        Cursor haveCursor = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 1" ,null);
+        String query = "SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " like ?";
+        Cursor haveCursor = db.rawQuery(query, new String[]{"'%x%'"});
         mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
-        MediaCursorAdapter mediaAdapterH = new MediaCursorAdapter(this, haveCursor);
+        MediaCursorAdapter mediaAdapterH = new MediaCursorAdapter(this, R.layout.media_item_view,haveCursor);
         mediaHave.setAdapter(mediaAdapterH);
         // if we want to change items in list view we do this
-        //mediaAdapter.changeCursor(newCursor);
-        Cursor wantCursor = db.rawQuery("SELECT * from " + FeedEntry.TABLE_NAME_MEDIA + " WHERE " + FeedEntry.COLUMN_BOUGHT + " = 0" ,null);
+        mediaAdapterH.changeCursor(haveCursor);
+        Cursor wantCursor = db.rawQuery(query, new String[]{"'%o%'"});
         mediaWant = (ListView)findViewById(R.id.mediaWantListView);
-        MediaCursorAdapter mediaAdapterW = new MediaCursorAdapter(this, wantCursor);
-        mediaHave.setAdapter(mediaAdapterW);
+        MediaCursorAdapter mediaAdapterW = new MediaCursorAdapter(this, R.layout.media_item_view,wantCursor);
+        mediaWant.setAdapter(mediaAdapterW);
+        mediaAdapterW.changeCursor(wantCursor);
 
     }
 

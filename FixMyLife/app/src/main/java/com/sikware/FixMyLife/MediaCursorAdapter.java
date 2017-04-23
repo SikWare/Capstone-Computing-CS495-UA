@@ -3,6 +3,7 @@ package com.sikware.FixMyLife;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.ResourceCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,9 @@ import com.sikware.FixMyLife.FeedReaderContract.FeedEntry;
  * Created by Adam Pluth on 4/21/2017.
  */
 
-public class MediaCursorAdapter extends CursorAdapter {
-    public MediaCursorAdapter(Context context, Cursor c) {
-        super(context, c,0);
+public class MediaCursorAdapter extends ResourceCursorAdapter {
+    public MediaCursorAdapter(Context context, int i,Cursor c) {
+        super(context, i,c);
     }
 
     @Override

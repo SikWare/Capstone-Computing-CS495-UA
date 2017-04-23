@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity
                 goTo(v);
             }
         });
+//        Global.mdb.openOrCreateDatabase(FeedReaderContract.FeedEntry.DATABASE_NAME,null);
     }
 
     @Override

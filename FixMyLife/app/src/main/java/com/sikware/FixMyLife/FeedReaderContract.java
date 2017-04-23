@@ -42,7 +42,7 @@ public final class FeedReaderContract {
                         COLUMN_TYPE + " TEXT," +
                         COLUMN_PLATFORM + " TEXT," + // 2
                         COLUMN_GENRE + " TEXT," + // 3
-                        COLUMN_BOUGHT + " INTEGER" +
+                        COLUMN_BOUGHT + " TEXT" +
                         ")";
 
         public static final String SQL_CREATE_PANTRY_TABLE =

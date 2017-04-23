@@ -13,7 +13,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Global.mDbHelper = new DBHelper(getApplicationContext());
-        SQLiteDatabase db = Global.mDbHelper.getReadableDatabase();
+        //SQLiteDatabase db = Global.mDbHelper.getReadableDatabase();
 
 
         Intent intent = new Intent(this, LoginActivity.class);
