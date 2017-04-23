@@ -62,7 +62,21 @@ public class Media extends AppCompatActivity
         loadLists();
 
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(!db.isOpen()){
+            db = Global.mDbHelper.getWritableDatabase();
+        }
 
+    }
+    @Override
+    public void onPause(){
+        if(db.isOpen()){
+            db.close();
+        }
+        super.onPause();
+    }
 
     @Override
     public void onBackPressed() {
