@@ -53,4 +53,5 @@
     <string name="server_client_id">694048456092-ka73lu6rlg4a5lkitne0h81u1rmuq6ka.apps.googleusercontent.com </string>
     <string name="platform">Platform:</string>
     <string name="genre">Genre:</string>
+    <string name="HW_ERROR">Buying or Wishing?</string>
 </resources>

@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.sikware.FixMyLife.FeedReaderContract.FeedEntry;
 
@@ -144,7 +146,6 @@ public class Media extends AppCompatActivity
                 //send data back from dialog
 
                 // Gets the data repository in write mode
-                ContentValues values = new ContentValues();
 
                 AlertDialog a = (AlertDialog) dialog;
 //                Context context = getApplicationContext();
@@ -158,24 +159,11 @@ public class Media extends AppCompatActivity
                 Global.mediaItem = new MediaItem(Global.getUser().groupID,name,type,platform,genre,bought);
                 //after creating item we set to global to keep in memory
                 Log.d("item",Global.mediaItem.toString());
-                //make Query
-                values.put(FeedEntry._ID, Global.mediaItem.id.toString());
-                values.put(FeedEntry.COLUMN_NAME, name);
-                values.put(FeedEntry.COLUMN_OWNER_ID, Global.getUser().groupID.toString());
-                values.put(FeedEntry.COLUMN_TYPE, type);
-                values.put(FeedEntry.COLUMN_PLATFORM, platform);
-                values.put(FeedEntry.COLUMN_GENRE, genre);
-                values.put(FeedEntry.COLUMN_GENRE, bought);
 
-                //after creating item add to db
-                long newRowId =
-                        // bear with me
-                        ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()
-                        ?
-                        db.insert(FeedEntry.TABLE_NAME_MEDIA_HAVE, null, values)
-                        :
-                        db.insert(FeedEntry.TABLE_NAME_MEDIA_WANT, null, values);// the null here is default for column value
-                Log.d("item","NewRowId: " + newRowId);
+                // insert to db
+                boolean b = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked();
+                Global.mDbHelper.insertMediaItem(b,db);
+
                 loadLists();
 
             }

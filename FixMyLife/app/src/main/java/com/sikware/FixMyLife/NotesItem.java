@@ -7,14 +7,14 @@ import java.util.UUID;
  * Created by Ken on 3/31/2017.
  */
 
-class NoteItem {
+class NotesItem {
 
     UUID id;
     UUID ownerID;
     String name;
     String details;
 
-    public NoteItem( UUID ownerID, String name, String type, String details ) {
+    public NotesItem(UUID ownerID, String name, String type, String details ) {
 
         this.id = UUID.randomUUID();
         this.ownerID = ownerID;

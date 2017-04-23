@@ -64,9 +64,9 @@
         />
 
     <RadioGroup
+        android:id="@+id/addItemRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checkedButton="@+id/addItemRadioHave"
         android:orientation="horizontal">
 
         <RadioButton
@@ -74,6 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:checked="true"
             android:text="@string/have_question"
             tools:text="@string/have_question" />
 
@@ -82,6 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:checked="false"
             android:text="@string/wish_question"
             tools:text="@string/wish_question" />
     </RadioGroup>
