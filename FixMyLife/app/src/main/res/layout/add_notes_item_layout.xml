@@ -12,7 +12,7 @@
         />
 
     <EditText
-        android:id="@+id/nameTextItem"
+        android:id="@+id/notesNameItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -23,11 +23,11 @@
         android:id="@+id/textView13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/quantityText"
+        android:text="@string/dueDate"
         />
 
     <EditText
-        android:id="@+id/qtyTextItem"
+        android:id="@+id/notesDueDateItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -37,11 +37,11 @@
         android:id="@+id/textView14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/units"
+        android:text="@string/ptVal"
         />
 
     <EditText
-        android:id="@+id/unitTextItem"
+        android:id="@+id/notesPointValueItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -52,41 +52,15 @@
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/type"
+        android:text="@string/details"
         />
 
     <EditText
-        android:id="@+id/typeTextItem"
+        android:id="@+id/notesDetailsItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
         />
-
-    <RadioGroup
-        android:id="@+id/addItemRadioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/addItemRadioHave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="true"
-            android:text="@string/have_question"
-            tools:text="@string/have_question" />
-
-        <RadioButton
-            android:id="@+id/addItemRadioWant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:checked="false"
-            android:text="@string/wish_question"
-            tools:text="@string/wish_question" />
-    </RadioGroup>
-
 
 </LinearLayout>

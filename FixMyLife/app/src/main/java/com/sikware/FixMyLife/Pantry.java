@@ -3,6 +3,8 @@ package com.sikware.FixMyLife;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -18,12 +20,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
 
 public class Pantry extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Button addItemButton,scanItemButton;
+    ListView pantryHave, pantryWant;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +48,6 @@ public class Pantry extends AppCompatActivity
 
 
         scanItemButton = (Button)findViewById(R.id.scanItemButton);
-        scanItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scanItem(v);
-            }
-        });
         addItemButton = (Button)findViewById(R.id.addItemBtn);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +55,26 @@ public class Pantry extends AppCompatActivity
                 addItem(v);
             }
         });
+
+        db = Global.mDbHelper.getWritableDatabase();
+
+        loadLists();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(!db.isOpen()){
+            db = Global.mDbHelper.getWritableDatabase();
+        }
+
+    }
+    @Override
+    public void onPause(){
+        if(db.isOpen()){
+            db.close();
+        }
+        super.onPause();
     }
 
 
@@ -119,22 +138,25 @@ public class Pantry extends AppCompatActivity
     void addItem(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.add_item_layout,null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
+        builder.setView(inflater.inflate(R.layout.add_pantry_item_layout,null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //send data back from dialog
+                //todo test this!!!
+                //todo this is wrong layout files are messed up easy fix;;
                 AlertDialog a = (AlertDialog) dialog;
                 Context context = getApplicationContext();
-                EditText Ename = (EditText)a.findViewById(R.id.nameTextItem);
+                EditText Ename = (EditText)a.findViewById(R.id.pantryNameItem);
                 String name = Ename.getText().toString();
-                String type = ((EditText)a.findViewById(R.id.typeTextItem)).getText().toString();
-                String unit = ((EditText)a.findViewById(R.id.unitTextItem)).getText().toString();
-                String quantity = ((EditText)a.findViewById(R.id.qtyTextItem)).getText().toString();
+                String type = ((EditText)a.findViewById(R.id.pantryTypeItem)).getText().toString();
+                String unit = ((EditText)a.findViewById(R.id.pantyrUnitItem)).getText().toString();
+                String quantity = ((EditText)a.findViewById(R.id.pantryQtyItem)).getText().toString();
                 boolean bought = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()?true:false;
                 //PantryItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
                 Global.pantryItem = new PantryItem(Global.getUser().groupID,name,type,unit,quantity,bought);
                 Log.d("item",Global.pantryItem.toString());
-                //after creating item we set to global to keep in memory
+                Global.mDbHelper.insertPantryItem(bought,db);
+//after creating item we set to global to keep in memory
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
@@ -151,17 +173,27 @@ public class Pantry extends AppCompatActivity
         dialog.show();
     }
 
-    private void scanItem(View v) {
-        Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_STARTED);
-        startActivityForResult(scanIntent, RESULT_OK);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Intent scanResult = intent;
-        if (scanResult != null) {
-            // handle scan result
+    private void loadLists(){
+        if(db.isOpen()== false){
+            db.openOrCreateDatabase(FeedReaderContract.FeedEntry.DATABASE_NAME,null);
         }
-        // else continue with any other code you need in the method
+
+        Cursor haveCursor = db.rawQuery(FeedReaderContract.FeedEntry.SQL_QUERY_ALL_PANTRY_HAVE, null);
+        PantryCursorAdapter pantryAdapterH = new PantryCursorAdapter(this, R.layout.pantry_item_view,haveCursor);
+
+        pantryHave = (ListView)findViewById(R.id.pantryHaveListView);
+        pantryHave.setAdapter(pantryAdapterH);
+
+        // if we want to change items in list view we do this
+        pantryAdapterH.changeCursor(haveCursor);
+
+        Cursor wantCursor = db.rawQuery(FeedReaderContract.FeedEntry.SQL_QUERY_ALL_PANTRY_WANT, null);
+        PantryCursorAdapter pantryAdapterW = new PantryCursorAdapter(this, R.layout.pantry_item_view,wantCursor);
+
+        pantryWant = (ListView)findViewById(R.id.pantryWantListView);
+        pantryWant.setAdapter(pantryAdapterW);
+
+        pantryAdapterW.changeCursor(wantCursor);
 
     }
 

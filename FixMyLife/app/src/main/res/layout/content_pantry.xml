@@ -9,7 +9,7 @@
     tools:showIn="@layout/app_bar_pantry">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="4dp"
@@ -38,7 +38,7 @@
                 android:orientation="vertical" />
         </ScrollView>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -46,6 +46,7 @@
                 android:id="@+id/havePantry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/have" />
 
             <TextView
@@ -54,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:layout_weight="1"
                 android:text="@string/quantity" />
 
             <TextView
@@ -64,6 +66,7 @@
                 android:layout_marginLeft="43dp"
                 android:layout_marginStart="43dp"
                 android:layout_toRightOf="@+id/qtyMedia"
+                android:layout_weight="1"
                 android:text="@string/unit" />
 
             <TextView
@@ -73,21 +76,18 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                android:layout_weight="1"
                 android:text="@string/priority" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <ScrollView
+        <ListView
+            android:id="@+id/pantryHaveListView"
+            style="@style/Widget.AppCompat.ListView"
             android:layout_width="match_parent"
-            android:layout_height="175dp"
-            android:background="@drawable/border">
+            android:layout_height="150dp"
+            android:background="@drawable/border" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -95,6 +95,7 @@
                 android:id="@+id/havePantry2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/have" />
 
             <TextView
@@ -103,6 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:layout_weight="1"
                 android:text="@string/quantity" />
 
             <TextView
@@ -114,6 +116,7 @@
                 android:layout_marginStart="43dp"
                 android:layout_toEndOf="@+id/qtyPantry2"
                 android:layout_toRightOf="@+id/qtyPantry2"
+                android:layout_weight="1"
                 android:text="@string/unit" />
 
             <TextView
@@ -123,19 +126,16 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                android:layout_weight="1"
                 android:text="@string/priority" />
-        </RelativeLayout>
+        </LinearLayout>
 
-        <ScrollView
+        <ListView
+            android:id="@+id/pantryWantListView"
+            style="@style/Widget.AppCompat.ListView"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="@drawable/border">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
+            android:background="@drawable/border" />
 
         <LinearLayout
             android:layout_width="wrap_content"

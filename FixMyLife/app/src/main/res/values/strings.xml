@@ -54,4 +54,8 @@
     <string name="platform">Platform:</string>
     <string name="genre">Genre:</string>
     <string name="HW_ERROR">Buying or Wishing?</string>
+    <string name="ptVal">Point Value:</string>
+    <string name="details">Details:</string>
+    <string name="dueDateText" />
+    <string name="dueDate">Due Date:</string>
 </resources>

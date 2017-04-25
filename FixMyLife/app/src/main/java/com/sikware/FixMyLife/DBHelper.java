@@ -63,11 +63,59 @@ public class DBHelper extends SQLiteOpenHelper {
         //after creating item add to db
         long newRowId =
                 // bear with me
-                    H
+                H
                         ?
                         db.insert(FeedEntry.TABLE_NAME_MEDIA_HAVE, null, values)
                         :
                         db.insert(FeedEntry.TABLE_NAME_MEDIA_WANT, null, values);// the null here is default for column value
+        Log.d("item","NewRowId: " + newRowId);
+
+    }
+
+    public void insertPantryItem(boolean H, SQLiteDatabase db){
+        //make Query
+        ContentValues values = new ContentValues();
+        values.put(FeedEntry._ID, Global.pantryItem.id.toString());
+        values.put(FeedEntry.COLUMN_NAME, Global.pantryItem.name);
+        values.put(FeedEntry.COLUMN_OWNER_ID, Global.getUser().groupID.toString());
+        values.put(FeedEntry.COLUMN_TYPE, Global.pantryItem.type);
+        values.put(FeedEntry.COLUMN_QUANTITY, Global.pantryItem.quantity);
+        values.put(FeedEntry.COLUMN_UNIT, Global.pantryItem.unit);
+        values.put(FeedEntry.COLUMN_BOUGHT, Global.pantryItem.isBought);
+
+
+        //after creating item add to db
+        long newRowId =
+                // bear with me
+                H
+                        ?
+                        db.insert(FeedEntry.TABLE_NAME_PANTRY_HAVE, null, values)
+                        :
+                        db.insert(FeedEntry.TABLE_NAME_PANTRY_WANT, null, values);// the null here is default for column value
+        Log.d("item","NewRowId: " + newRowId);
+
+    }
+    public void insertNotesItem(boolean H, SQLiteDatabase db){
+        //make Query
+        ContentValues values = new ContentValues();
+        values.put(FeedEntry._ID, Global.notesItem.id.toString());
+        values.put(FeedEntry.COLUMN_NAME, Global.notesItem.name);
+        values.put(FeedEntry.COLUMN_OWNER_ID, Global.getUser().groupID.toString());
+        values.put(FeedEntry.COLUMN_DETAILS, Global.notesItem.details);
+        values.put(FeedEntry.COLUMN_DUEDATE, Global.notesItem.dueDate);
+        values.put(FeedEntry.COLUMN_POINTVALUE, Global.notesItem.pointVal);
+        values.put(FeedEntry.COLUMN_COMPLETED, Global.notesItem.completed);
+        values.put(FeedEntry.COLUMN_APPROVED, Global.notesItem.approved);
+
+
+        //after creating item add to db
+        long newRowId =
+                // bear with me
+                H
+                        ?
+                        db.insert(FeedEntry.TABLE_NAME_NOTES_HAVE, null, values)
+                        :
+                        db.insert(FeedEntry.TABLE_NAME_NOTES_WANT, null, values);// the null here is default for column value
         Log.d("item","NewRowId: " + newRowId);
 
     }

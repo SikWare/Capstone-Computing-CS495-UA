@@ -125,7 +125,7 @@ public final class FeedReaderContract {
         public static final String SQL_QUERY_ALL_MEDIA_WANT = "SELECT * from " + TABLE_NAME_MEDIA_WANT;
         public static final String SQL_QUERY_ALL_PANTRY_HAVE = "SELECT * from " + TABLE_NAME_PANTRY_HAVE;
         public static final String SQL_QUERY_ALL_PANTRY_WANT = "SELECT * from " + TABLE_NAME_PANTRY_WANT;
-        public static final String SQL_QUERY_ALL__NOTES_HAVE = "SELECT * from " + TABLE_NAME_NOTES_HAVE;
+        public static final String SQL_QUERY_ALL_NOTES_HAVE = "SELECT * from " + TABLE_NAME_NOTES_HAVE;
         public static final String SQL_QUERY_ALL_NOTES_WANT = "SELECT * from " + TABLE_NAME_NOTES_WANT;
 
     }

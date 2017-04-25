@@ -18,9 +18,9 @@ class Global extends Application {
 
     static PantryItem pantryItem = null;
     static MediaItem mediaItem = null;
+    static NotesItem notesItem = null;
     static GoogleSignInAccount acct;
     static DBHelper mDbHelper = null;//
-    static SQLiteDatabase mdb = null;// = mDbHelper.getWritableDatabase();
 
     // this is the only place we should do this for security reasons
     //|||||||||||||

@@ -12,20 +12,22 @@
         />
 
     <EditText
-        android:id="@+id/mediaNameItem"
+        android:id="@+id/pantryNameItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Type:" />
+        android:text="@string/quantityText"
+        />
 
     <EditText
-        android:id="@+id/mediaTypeItem"
+        android:id="@+id/pantryQtyItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -35,32 +37,36 @@
         android:id="@+id/textView14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Platform:" />
+        android:text="@string/units"
+        />
 
     <EditText
-        android:id="@+id/mediaPlatformItem"
+        android:id="@+id/pantyrUnitItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        />
 
     <TextView
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Genre:" />
+        android:text="@string/type"
+        />
 
     <EditText
-        android:id="@+id/mediaGenreItem"
+        android:id="@+id/pantryTypeItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        />
 
     <RadioGroup
+        android:id="@+id/addItemRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:checkedButton="@+id/addItemRadioHave"
         android:orientation="horizontal">
 
         <RadioButton
@@ -68,14 +74,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:checked="true"
             android:text="@string/have_question"
             tools:text="@string/have_question" />
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/addItemRadioWant"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:checked="false"
             android:text="@string/wish_question"
             tools:text="@string/wish_question" />
     </RadioGroup>
