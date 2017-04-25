@@ -16,10 +16,11 @@ class NotesItem {
     String details;
     String dueDate;
     String pointVal;
+    boolean urgent;
     boolean completed;
     boolean approved;
 
-    public NotesItem(UUID ownerID, String name, String dueDate, String pointVal, String details) {
+    public NotesItem(UUID ownerID, String name, String dueDate, String pointVal, String details,boolean urgent) {
 
         this.id = UUID.randomUUID();
         this.ownerID = ownerID;
@@ -28,6 +29,7 @@ class NotesItem {
         this.dueDate = dueDate;
         this.pointVal = pointVal;
 //        this.assignedTo = assignTo;
+        this.urgent = urgent;
         this.completed = false;
         this.approved = false;
     }

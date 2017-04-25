@@ -58,4 +58,5 @@
     <string name="details">Details:</string>
     <string name="dueDateText" />
     <string name="dueDate">Due Date:</string>
+    <string name="urgetnQuestiom">Urgent?</string>
 </resources>

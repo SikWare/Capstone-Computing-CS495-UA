@@ -184,7 +184,7 @@ public class Media extends AppCompatActivity
             db.openOrCreateDatabase(FeedEntry.DATABASE_NAME,null);
         }
 
-        Cursor haveCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEADIA_HAVE, null);
+        Cursor haveCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEDIA_HAVE, null);
         MediaCursorAdapter mediaAdapterH = new MediaCursorAdapter(this, R.layout.media_item_view,haveCursor);
 
         mediaHave = (ListView)findViewById(R.id.mediaHaveListView);

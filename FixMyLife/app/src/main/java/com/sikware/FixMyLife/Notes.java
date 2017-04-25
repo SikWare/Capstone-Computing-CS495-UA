@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -149,15 +150,16 @@ public class Notes extends AppCompatActivity
                 String dueDate = ((EditText)a.findViewById(R.id.notesDueDateItem)).getText().toString();
                 String pointVal = ((EditText)a.findViewById(R.id.notesPointValueItem)).getText().toString();
                 String details = ((EditText)a.findViewById(R.id.notesDetailsItem)).getText().toString();
+                boolean urgent = ((CheckBox)a.findViewById(R.id.urgentChkBx)).isChecked();
                 //NotesItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
-                Global.notesItem = new NotesItem(Global.getUser().groupID,name,dueDate,pointVal,details);
+                Global.notesItem = new NotesItem(Global.getUser().groupID,name,dueDate,pointVal,details,urgent);
                 //after creating item we set to global to keep in memory
                 Log.d("item",Global.notesItem.toString());
 
                 // insert to db
                 //todo put the boolean back in(urgent messages are want);
                 //the boolean is what determines which db the item goes in
-                Global.mDbHelper.insertNotesItem(true,db);
+                Global.mDbHelper.insertNotesItem(urgent,db);
 
                 loadLists();
 

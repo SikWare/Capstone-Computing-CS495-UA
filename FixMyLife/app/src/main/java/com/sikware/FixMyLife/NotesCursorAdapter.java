@@ -21,22 +21,25 @@ public class NotesCursorAdapter extends ResourceCursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(R.layout.media_item_view, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.notes_item_view, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         //todo make this right
         TextView name = (TextView) view.findViewById(R.id.name);
-        TextView platform = (TextView) view.findViewById(R.id.platform);
-        TextView genre = (TextView) view.findViewById(R.id.genre);
+        TextView dueDate = (TextView) view.findViewById(R.id.notesDueDate);
+        TextView pointVal = (TextView) view.findViewById(R.id.notesPointValue);
+        TextView details = (TextView) view.findViewById(R.id.notesDetails);
         // Extract properties from cursor
         String nameText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_NAME));
-        String platformText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_PLATFORM));
-        String genreText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_GENRE));
+        String dateText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_DUEDATE));
+        String pointText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_POINTVALUE));
+        String detailsText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_DETAILS));
         // Populate fields with extracted properties
         name.setText(nameText);
-        platform.setText(String.valueOf(platformText));
-        genre.setText(genreText);
+        dueDate.setText(String.valueOf(dateText));
+        pointVal.setText(pointText);
+        details.setText(detailsText);
     }
 }
