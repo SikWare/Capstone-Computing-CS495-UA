@@ -70,14 +70,14 @@
                 android:text="@string/unit" />
 
             <TextView
-                android:id="@+id/priorPantry"
+                android:id="@+id/typePantry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_weight="1"
-                android:text="@string/priority" />
+                android:text="@string/type" />
         </LinearLayout>
 
         <ListView
@@ -96,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/have" />
+                android:text="@string/want" />
 
             <TextView
                 android:id="@+id/qtyPantry2"
@@ -120,14 +120,14 @@
                 android:text="@string/unit" />
 
             <TextView
-                android:id="@+id/prioPantry2"
+                android:id="@+id/typePantry2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_weight="1"
-                android:text="@string/priority" />
+                android:text="@string/type" />
         </LinearLayout>
 
         <ListView

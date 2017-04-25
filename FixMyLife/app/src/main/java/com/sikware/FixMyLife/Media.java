@@ -151,14 +151,14 @@ public class Media extends AppCompatActivity
                 String type = ((EditText)a.findViewById(R.id.mediaTypeItem)).getText().toString();
                 String platform = ((EditText)a.findViewById(R.id.mediaPlatformItem)).getText().toString();
                 String genre = ((EditText)a.findViewById(R.id.mediaGenreItem)).getText().toString();
-                String bought = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()?"x":"o";
+                String bought = ((RadioButton)a.findViewById(R.id.addMediaItemRadioHave)).isChecked()?"x":"o";
                 //MediaItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
                 Global.mediaItem = new MediaItem(Global.getUser().groupID,name,type,platform,genre,bought);
                 //after creating item we set to global to keep in memory
                 Log.d("item",Global.mediaItem.toString());
 
                 // insert to db
-                boolean b = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked();
+                boolean b = ((RadioButton)a.findViewById(R.id.addPantryItemRadioHave)).isChecked();
                 Global.mDbHelper.insertMediaItem(b,db);
 
                 loadLists();

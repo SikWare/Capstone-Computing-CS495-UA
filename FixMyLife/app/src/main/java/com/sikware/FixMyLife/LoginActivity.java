@@ -80,11 +80,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private void handleSignInResult(GoogleSignInResult result){
         Log.d(TAG, "handleSignInResult: " + result.isSuccess());
         if(result.isSuccess()) {
+            //todo launch activity if .isSuccess()
             acct = result.getSignInAccount();
             Log.d(TAG, "Name: " + acct.getDisplayName());
             Log.d(TAG, "Email: " + acct.getEmail());
             //updateUI(true);
-            }
+            }// todo move to bottom when finished
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

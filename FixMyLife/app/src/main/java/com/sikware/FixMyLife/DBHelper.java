@@ -116,7 +116,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         db.insert(FeedEntry.TABLE_NAME_NOTES_HAVE, null, values)
                         :
                         db.insert(FeedEntry.TABLE_NAME_NOTES_WANT, null, values);// the null here is default for column value
-        Log.d("item","NewRowId: " + newRowId);
+
+      Log.d("item","NewRowId: " + newRowId);
 
     }
 

@@ -29,7 +29,7 @@ public final class FeedReaderContract {
         public static final String COLUMN_QUANTITY = "quantity";
         public static final String COLUMN_UNIT = "unit";
         public static final String COLUMN_DETAILS = "details";
-        public static final String COLUMN_DUEDATE = "due date";
+        public static final String COLUMN_DUEDATE = "dueDate";
         public static final String COLUMN_POINTVALUE = "pointValue";
         public static final String COLUMN_ASSIGNTO = "assignTo";
         public static final String COLUMN_COMPLETED = "completed";

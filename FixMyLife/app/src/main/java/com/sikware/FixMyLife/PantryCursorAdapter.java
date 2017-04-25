@@ -27,16 +27,19 @@ public class PantryCursorAdapter extends ResourceCursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         //todo make this right
-        TextView name = (TextView) view.findViewById(R.id.name);
-        TextView platform = (TextView) view.findViewById(R.id.platform);
-        TextView genre = (TextView) view.findViewById(R.id.genre);
+        TextView name = (TextView) view.findViewById(R.id.pantryName);
+        TextView quantity = (TextView) view.findViewById(R.id.pantryQty);
+        TextView unit = (TextView) view.findViewById(R.id.pantryUnit);
+        TextView type = (TextView) view.findViewById(R.id.pantryType);
         // Extract properties from cursor
         String nameText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_NAME));
-        String platformText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_PLATFORM));
-        String genreText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_GENRE));
+        String qunatityText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_QUANTITY));
+        String unitText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_UNIT));
+        String typeText = cursor.getString(cursor.getColumnIndexOrThrow(FeedEntry.COLUMN_TYPE));
         // Populate fields with extracted properties
         name.setText(nameText);
-        platform.setText(String.valueOf(platformText));
-        genre.setText(genreText);
+        quantity.setText(String.valueOf(qunatityText));
+        unit.setText(unitText);
+        type.setText(typeText);
     }
 }

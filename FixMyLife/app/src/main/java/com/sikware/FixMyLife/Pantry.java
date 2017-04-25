@@ -145,13 +145,12 @@ public class Pantry extends AppCompatActivity
                 //todo test this!!!
                 //todo this is wrong layout files are messed up easy fix;;
                 AlertDialog a = (AlertDialog) dialog;
-                Context context = getApplicationContext();
                 EditText Ename = (EditText)a.findViewById(R.id.pantryNameItem);
                 String name = Ename.getText().toString();
                 String type = ((EditText)a.findViewById(R.id.pantryTypeItem)).getText().toString();
                 String unit = ((EditText)a.findViewById(R.id.pantyrUnitItem)).getText().toString();
                 String quantity = ((EditText)a.findViewById(R.id.pantryQtyItem)).getText().toString();
-                boolean bought = ((RadioButton)a.findViewById(R.id.addItemRadioHave)).isChecked()?true:false;
+                boolean bought = ((RadioButton)a.findViewById(R.id.addPantryItemRadioHave)).isChecked()?true:false;
                 //PantryItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
                 Global.pantryItem = new PantryItem(Global.getUser().groupID,name,type,unit,quantity,bought);
                 Log.d("item",Global.pantryItem.toString());
