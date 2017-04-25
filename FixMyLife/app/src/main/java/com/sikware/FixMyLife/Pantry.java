@@ -155,6 +155,7 @@ public class Pantry extends AppCompatActivity
                 Global.pantryItem = new PantryItem(Global.getUser().groupID,name,type,unit,quantity,bought);
                 Log.d("item",Global.pantryItem.toString());
                 Global.mDbHelper.insertPantryItem(bought,db);
+                loadLists();
 //after creating item we set to global to keep in memory
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
