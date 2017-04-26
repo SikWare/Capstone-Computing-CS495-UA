@@ -15,15 +15,15 @@ import com.claudiodegio.dbsync.DBSync;
 import com.claudiodegio.dbsync.TableToSync;
 import com.claudiodegio.dbsync.provider.CloudProvider;
 import com.claudiodegio.dbsync.provider.GDriveCloudProvider;
+import com.google.android.gms.drive.DriveId;
+
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.DriveId;
 
 import static com.sikware.FixMyLife.Global.acct;
 
@@ -113,6 +113,25 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             acct = result.getSignInAccount();
             Log.d(TAG, "Name: " + acct.getDisplayName());
             Log.d(TAG, "Email: " + acct.getEmail());
+            String driveId = acct.getId();
+            if (driveId != null) {
+                mDriveId = DriveId.decodeFromString(driveId);
+
+
+                CloudProvider gDriveProvider = new GDriveCloudProvider.Builder(this.getBaseContext())
+                        .setSyncFileByDriveId(mDriveId)
+                        .setGoogleApiClient(mGoogleApiClient)
+                        .build();
+
+                DBSync  dbSync = new DBSync.Builder(this.getBaseContext())
+                        .setCloudProvider(gDriveProvider)
+                        .setSQLiteDatabase(Global.mDbHelper.getReadableDatabase())
+                        .setDataBaseName(Global.mDbHelper.getDatabaseName())
+                        .addTable(new TableToSync.Builder("name").build())
+                        .build();
+                dbSync.sync();
+
+            }
             //updateUI(true);
             }// todo move to bottom when finished
             Intent intent = new Intent(this, MainActivity.class);

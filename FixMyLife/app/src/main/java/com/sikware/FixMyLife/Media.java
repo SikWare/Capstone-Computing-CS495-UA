@@ -158,7 +158,7 @@ public class Media extends AppCompatActivity
                 Log.d("item",Global.mediaItem.toString());
 
                 // insert to db
-                boolean b = ((RadioButton)a.findViewById(R.id.addPantryItemRadioHave)).isChecked();
+                boolean b = ((RadioButton)a.findViewById(R.id.addMediaItemRadioHave)).isChecked();
                 Global.mDbHelper.insertMediaItem(b,db);
 
                 loadLists();
