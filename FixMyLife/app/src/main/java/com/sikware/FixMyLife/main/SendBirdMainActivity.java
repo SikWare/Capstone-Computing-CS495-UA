@@ -17,7 +17,7 @@ import com.sikware.FixMyLife.groupchannel.GroupChannelActivity;
 import com.sikware.FixMyLife.openchannel.OpenChannelActivity;
 import com.sikware.FixMyLife.utils.PreferenceUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class SendBirdMainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private NavigationView mNavView;
@@ -37,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if (id == R.id.nav_item_open_channels) {
-                    Intent intent = new Intent(MainActivity.this, OpenChannelActivity.class);
+                    Intent intent = new Intent(SendBirdMainActivity.this, com.sikware.FixMyLife.openchannel.OpenChannelActivity.class);
                     startActivity(intent);
                     return true;
 
                 } else if (id == R.id.nav_item_group_channels) {
-                    Intent intent = new Intent(MainActivity.this, GroupChannelActivity.class);
+                    Intent intent = new Intent(SendBirdMainActivity.this, com.sikware.FixMyLife.groupchannel.GroupChannelActivity.class);
                     startActivity(intent);
                     return true;
 
@@ -76,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                Toast.makeText(MainActivity.this, "All push tokens unregistered.", Toast.LENGTH_SHORT)
+                Toast.makeText(SendBirdMainActivity.this, "All push tokens unregistered.", Toast.LENGTH_SHORT)
                         .show();
 
                 SendBird.disconnect(new SendBird.DisconnectHandler() {
                     @Override
                     public void onDisconnected() {
-                        PreferenceUtils.setConnected(MainActivity.this, false);
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        PreferenceUtils.setConnected(SendBirdMainActivity.this, false);
+                        Intent intent = new Intent(getApplicationContext(), SendBirdLoginActivity.class);
                         startActivity(intent);
                         finish();
                     }

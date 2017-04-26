@@ -2,6 +2,7 @@ package com.sikware.FixMyLife.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
@@ -19,12 +20,13 @@ import com.sendbird.android.User;
 import com.sikware.FixMyLife.R;
 import com.sikware.FixMyLife.utils.PreferenceUtils;
 
-public class LoginActivity extends AppCompatActivity {
+public class SendBirdLoginActivity extends AppCompatActivity {
 
     private CoordinatorLayout mLoginLayout;
     private TextInputEditText mUserIdConnectEditText, mUserNicknameEditText;
     private Button mConnectButton;
     private ContentLoadingProgressBar mProgressBar;
+    private static final String APP_ID = "BDCD4D3E-2E3A-4CB7-A108-DB19B465B31F";
 
 
     @Override
@@ -51,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 String userNickname = mUserNicknameEditText.getText().toString();
 
-                PreferenceUtils.setUserId(LoginActivity.this, userId);
-                PreferenceUtils.setNickname(LoginActivity.this, userNickname);
+                PreferenceUtils.setUserId(SendBirdLoginActivity.this, userId);
+                PreferenceUtils.setNickname(SendBirdLoginActivity.this, userNickname);
 
                 connectToSendBird(userId, userNickname);
 
@@ -66,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         String sdkVersion = String.format(getResources().getString(R.string.all_app_version),
                 BaseApplication.VERSION, SendBird.getSDKVersion());
         ((TextView) findViewById(R.id.text_login_versions)).setText(sdkVersion);
+        SendBird.init(APP_ID, getApplicationContext());
     }
 
     @Override
@@ -95,25 +98,25 @@ public class LoginActivity extends AppCompatActivity {
                 if (e != null) {
                     // Error!
                     Toast.makeText(
-                            LoginActivity.this, "" + e.getCode() + ": " + e.getMessage(),
+                            SendBirdLoginActivity.this, "" + e.getCode() + ": " + e.getMessage(),
                             Toast.LENGTH_SHORT)
                             .show();
 
                     // Show login failure snackbar
                     showSnackbar("Login to SendBird failed");
                     mConnectButton.setEnabled(true);
-                    PreferenceUtils.setConnected(LoginActivity.this, false);
+                    PreferenceUtils.setConnected(SendBirdLoginActivity.this, false);
                     return;
                 }
 
-                PreferenceUtils.setConnected(LoginActivity.this, true);
+                PreferenceUtils.setConnected(SendBirdLoginActivity.this, true);
 
                 // Update the user's nickname
                 updateCurrentUserInfo(userNickname);
                 updateCurrentUserPushToken();
 
-                // Proceed to MainActivity
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                // Proceed to SendBirdMainActivity
+                Intent intent = new Intent(SendBirdLoginActivity.this, SendBirdMainActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -131,11 +134,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onRegistered(SendBird.PushTokenRegistrationStatus pushTokenRegistrationStatus, SendBirdException e) {
                         if (e != null) {
                             // Error!
-                            Toast.makeText(LoginActivity.this, "" + e.getCode() + ":" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SendBirdLoginActivity.this, "" + e.getCode() + ":" + e.getMessage(), Toast.LENGTH_SHORT).show();
                             return;
                         }
 
-                        Toast.makeText(LoginActivity.this, "Push token registered.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SendBirdLoginActivity.this, "Push token registered.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -151,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (e != null) {
                     // Error!
                     Toast.makeText(
-                            LoginActivity.this, "" + e.getCode() + ":" + e.getMessage(),
+                            SendBirdLoginActivity.this, "" + e.getCode() + ":" + e.getMessage(),
                             Toast.LENGTH_SHORT)
                             .show();
 

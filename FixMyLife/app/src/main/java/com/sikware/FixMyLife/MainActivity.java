@@ -22,6 +22,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.sikware.FixMyLife.main.SendBirdLoginActivity;
+import com.sikware.FixMyLife.main.SendBirdMainActivity;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -159,7 +162,7 @@ public class MainActivity extends AppCompatActivity
                 intent = new Intent(this,Media.class);
                 break;
             case("Chat"):
-                intent = new Intent(this,Chat.class);
+                intent = new Intent(this,SendBirdLoginActivity.class);
                 break;
             case("Progress"):
                 intent = new Intent(this,Progress.class);

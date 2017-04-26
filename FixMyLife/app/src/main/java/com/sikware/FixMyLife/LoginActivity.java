@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        //Intent intent = new Intent(this,MainActivity.class);
+        //Intent intent = new Intent(this,SendBirdMainActivity.class);
         //startActivity(intent);
         //finish();
     }

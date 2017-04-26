@@ -106,4 +106,5 @@
     <!-- Message Status -->
     <string name="message_sending">Sending</string>
     <string name="message_failed">Failed</string>
+    <string name="title_activity_Login">Login In</string>
 </resources>
