@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
-                .addApi(Drive.API)
+//                .addApi(Drive.API)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         signInButton = (SignInButton)findViewById(R.id.sign_in_button);

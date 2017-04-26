@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity
                         // Get an output stream for the contents.
                         OutputStream outputStream = result.getDriveContents().getOutputStream();
                         // Write the bitmap data from it.
-                        dbStream = new File(FeedReaderContract.FeedEntry.DATABASE_NAME);
+                        dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
                         try {
                             //dbStream.toURL();
                             b = readFileToByteArray(dbStream);
@@ -317,19 +317,19 @@ public class MainActivity extends AppCompatActivity
                         // Create the initial metadata - MIME type and title.
                         // Note that the user will be able to change the title later.
                         MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-                                .setMimeType("image/jpeg").setTitle("Android Photo.png").build();
+                                .setMimeType("application/x-binary").setTitle(FeedReaderContract.FeedEntry.DATABASE_NAME).build();
                         // Create an intent for the file chooser, and start it.
                         IntentSender intentSender = Drive.DriveApi
                                 .newCreateFileActivityBuilder()
                                 .setInitialMetadata(metadataChangeSet)
                                 .setInitialDriveContents(result.getDriveContents())
                                 .build(mGoogleApiClient);
-                        try {
+                        /*try {
                             startIntentSenderForResult(
                                     intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
                         } catch (IntentSender.SendIntentException e) {
                             Log.i(TAG, "Failed to launch file chooser.");
-                        }
+                        }*/
                     }
                 });
     }
