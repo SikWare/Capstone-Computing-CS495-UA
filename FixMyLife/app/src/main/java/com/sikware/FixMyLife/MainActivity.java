@@ -40,8 +40,14 @@ import com.sikware.FixMyLife.main.SendBirdLoginActivity;
 import com.sikware.FixMyLife.main.SendBirdMainActivity;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+
+import static org.apache.commons.io.FileUtils.readFileToByteArray;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.ConnectionCallbacks,
@@ -278,6 +284,12 @@ public class MainActivity extends AppCompatActivity
                         // If the operation was not successful, we cannot do anything
                         // and must
                         // fail.
+                        File dbStream;
+                        byte[] buf = new byte[1024];
+                        int len;
+                        byte[] b = new byte[0];
+
+
                         if (!result.getStatus().isSuccess()) {
                             Log.i(TAG, "Failed to create new contents.");
                             return;
@@ -287,10 +299,18 @@ public class MainActivity extends AppCompatActivity
                         // Get an output stream for the contents.
                         OutputStream outputStream = result.getDriveContents().getOutputStream();
                         // Write the bitmap data from it.
-                        ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
-                        image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
+                        dbStream = new File(FeedReaderContract.FeedEntry.DATABASE_NAME);
                         try {
-                            outputStream.write(bitmapStream.toByteArray());
+                            //dbStream.toURL();
+                            b = readFileToByteArray(dbStream);
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        //image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
+                        try {
+                            outputStream.write(b);
                         } catch (IOException e1) {
                             Log.i(TAG, "Unable to write file contents.");
                         }
@@ -318,12 +338,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "API client connected.");
-        if (mBitmapToSave == null) {
+        /*if (mBitmapToSave == null) {
             // This activity has no UI of its own. Just start the camera.
-            startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-                    REQUEST_CODE_CAPTURE_IMAGE);
+            //startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+            //        REQUEST_CODE_CAPTURE_IMAGE);
             return;
-        }
+        }*/
         saveFileToDrive();
     }
 
