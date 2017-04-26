@@ -109,6 +109,11 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+        <service android:name="com.claudiodegio.dbsync.provider.GDriveEventService" android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.drive.events.HANDLE_EVENT"/>
+            </intent-filter>
+        </service>
         <provider
             android:name="StubProvider"
             android:authorities="com.sikware.FixMyLife.provider"

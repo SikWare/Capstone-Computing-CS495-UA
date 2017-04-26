@@ -1,5 +1,6 @@
 package com.sikware.FixMyLife;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.support.annotation.NonNull;
@@ -10,6 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.claudiodegio.dbsync.DBSync;
+import com.claudiodegio.dbsync.TableToSync;
+import com.claudiodegio.dbsync.provider.CloudProvider;
+import com.claudiodegio.dbsync.provider.GDriveCloudProvider;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -18,6 +23,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.DriveId;
 
 import static com.sikware.FixMyLife.Global.acct;
 
@@ -29,6 +35,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
     SignInButton signInButton;
+    protected DriveId mDriveId;
+    final String DRIVE_ID_FILE = "DRIVE_ID_FILE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,27 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 signIn();
             }
         });
+
+        String driveId = getPreferences(Context.MODE_PRIVATE).getString(DRIVE_ID_FILE, null);
+
+        if (driveId != null) {
+            mDriveId = DriveId.decodeFromString(driveId);
+
+
+        CloudProvider gDriveProvider = new GDriveCloudProvider.Builder(this.getBaseContext())
+                .setSyncFileByDriveId(mDriveId)
+                .setGoogleApiClient(mGoogleApiClient)
+                .build();
+
+        DBSync  dbSync = new DBSync.Builder(this.getBaseContext())
+                .setCloudProvider(gDriveProvider)
+                .setSQLiteDatabase(Global.mDbHelper.getReadableDatabase())
+                .setDataBaseName(Global.mDbHelper.getDatabaseName())
+                .addTable(new TableToSync.Builder("name").build())
+                .build();
+        dbSync.sync();
+
+        }
 
         //Intent intent = new Intent(this,SendBirdMainActivity.class);
         //startActivity(intent);
