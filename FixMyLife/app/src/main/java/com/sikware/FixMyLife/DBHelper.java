@@ -44,10 +44,6 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public Cursor queryAll(){
-        return null;
-    }
-
     public void insertMediaItem(boolean H, SQLiteDatabase db){
         //make Query
         ContentValues values = new ContentValues();
@@ -71,7 +67,6 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d("item","NewRowId: " + newRowId);
 
     }
-
     public void insertPantryItem(boolean H, SQLiteDatabase db){
         //make Query
         ContentValues values = new ContentValues();
