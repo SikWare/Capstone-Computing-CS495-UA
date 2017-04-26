@@ -25,6 +25,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.OpenFileActivityBuilder;
 
 import static com.sikware.FixMyLife.Global.acct;
 
@@ -97,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onActivityResult(requestCode,resultCode, data);
         if(requestCode == RC_SIGN_IN){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+            handleSignInResult(result,data);
         }
     }
 
@@ -108,15 +109,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-    private void handleSignInResult(GoogleSignInResult result){
+    private void handleSignInResult(GoogleSignInResult result, Intent data){
         Log.d(TAG, "handleSignInResult: " + result.isSuccess());
+        mDriveId = data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
         if(result.isSuccess()) {
             //todo launch activity if .isSuccess()
             acct = result.getSignInAccount();
             Log.d(TAG, "Name: " + acct.getDisplayName());
             Log.d(TAG, "Email: " + acct.getEmail());
             String driveId = DRIVE_ID_FILE;
-            if (driveId != null) {
+            mDriveId = data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+            if (mDriveId != null) {
                 mDriveId = DriveId.decodeFromString(driveId);
 
 
