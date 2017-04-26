@@ -13,6 +13,7 @@ import android.content.IntentSender;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -29,22 +30,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.claudiodegio.dbsync.DBSync;
+import com.claudiodegio.dbsync.TableToSync;
+import com.claudiodegio.dbsync.provider.CloudProvider;
+import com.claudiodegio.dbsync.provider.GDriveCloudProvider;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
+import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.sikware.FixMyLife.main.SendBirdLoginActivity;
 import com.sikware.FixMyLife.main.SendBirdMainActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.MalformedURLException;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
@@ -142,9 +151,9 @@ public class MainActivity extends AppCompatActivity
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
-        }
         // Connect the client. Once connected, the camera is launched.
         mGoogleApiClient.connect();
+        }
     }
 
     @Override
@@ -256,7 +265,7 @@ public class MainActivity extends AppCompatActivity
                 // Called after a photo has been taken.
                 if (resultCode == Activity.RESULT_OK) {
                     // Store the image data as a bitmap for writing later.
-                    mBitmapToSave = (Bitmap) data.getExtras().get("data");
+//                    mBitmapToSave = (Bitmap) data.getExtras().get("data");
                 }
                 break;
             case REQUEST_CODE_CREATOR:
@@ -265,8 +274,8 @@ public class MainActivity extends AppCompatActivity
                     Log.i(TAG, "Image successfully saved.");
                     mBitmapToSave = null;
                     // Just start the camera again for another photo.
-                    startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-                            REQUEST_CODE_CAPTURE_IMAGE);
+                    //startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
+                    //        REQUEST_CODE_CAPTURE_IMAGE);
                 }
                 break;
         }
@@ -275,7 +284,6 @@ public class MainActivity extends AppCompatActivity
     private void saveFileToDrive() {
         // Start by creating a new contents, and setting a callback.
         Log.i(TAG, "Creating new contents.");
-        final Bitmap image = mBitmapToSave;
         Drive.DriveApi.newDriveContents(mGoogleApiClient)
                 .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
 
@@ -284,7 +292,8 @@ public class MainActivity extends AppCompatActivity
                         // If the operation was not successful, we cannot do anything
                         // and must
                         // fail.
-                        File dbStream;
+
+                        File dbStream = null;
                         byte[] buf = new byte[1024];
                         int len;
                         byte[] b = new byte[0];
@@ -294,12 +303,22 @@ public class MainActivity extends AppCompatActivity
                             Log.i(TAG, "Failed to create new contents.");
                             return;
                         }
-                        // Otherwise, we can write our data to the new contents.
+                        // Otherwise, we can write our data to the new contents./
                         Log.i(TAG, "New contents created.");
+                        DriveContents contents = result.getDriveContents();
                         // Get an output stream for the contents.
-                        OutputStream outputStream = result.getDriveContents().getOutputStream();
-                        // Write the bitmap data from it.
-                        dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
+                        ParcelFileDescriptor pFile = contents.getParcelFileDescriptor();
+                        FileInputStream input = new FileInputStream(pFile.getFileDescriptor());
+                        try {
+                            input.read(new byte[input.available()]);
+                            FileOutputStream outputStream = new FileOutputStream(pFile.getFileDescriptor());
+                            Writer writer = new OutputStreamWriter(outputStream);
+//                            result.getDriveContents().getOutputStream();
+                            // Write the bitmap data from it.
+                            dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         try {
                             //dbStream.toURL();
                             b = readFileToByteArray(dbStream);
@@ -309,11 +328,11 @@ public class MainActivity extends AppCompatActivity
                             e.printStackTrace();
                         }
                         //image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
-                        try {
-                            outputStream.write(b);
-                        } catch (IOException e1) {
-                            Log.i(TAG, "Unable to write file contents.");
-                        }
+//                        try {
+//                            Writer.write(b);
+//                        } catch (IOException e1) {
+//                            Log.i(TAG, "Unable to write file contents.");
+//                        }
                         // Create the initial metadata - MIME type and title.
                         // Note that the user will be able to change the title later.
                         MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
@@ -324,12 +343,12 @@ public class MainActivity extends AppCompatActivity
                                 .setInitialMetadata(metadataChangeSet)
                                 .setInitialDriveContents(result.getDriveContents())
                                 .build(mGoogleApiClient);
-                        /*try {
+                        try {
                             startIntentSenderForResult(
                                     intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
                         } catch (IntentSender.SendIntentException e) {
                             Log.i(TAG, "Failed to launch file chooser.");
-                        }*/
+                        }
                     }
                 });
     }

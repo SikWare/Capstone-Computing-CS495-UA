@@ -67,6 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Log.d("item","NewRowId: " + newRowId);
 
     }
+
     public void insertPantryItem(boolean H, SQLiteDatabase db){
         //make Query
         ContentValues values = new ContentValues();
