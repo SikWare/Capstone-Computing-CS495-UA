@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             acct = result.getSignInAccount();
             Log.d(TAG, "Name: " + acct.getDisplayName());
             Log.d(TAG, "Email: " + acct.getEmail());
-            String driveId = acct.getId();
+            String driveId = DRIVE_ID_FILE;
             if (driveId != null) {
                 mDriveId = DriveId.decodeFromString(driveId);
 
