@@ -15,6 +15,7 @@ import com.claudiodegio.dbsync.DBSync;
 import com.claudiodegio.dbsync.TableToSync;
 import com.claudiodegio.dbsync.provider.CloudProvider;
 import com.claudiodegio.dbsync.provider.GDriveCloudProvider;
+import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveId;
 
 import com.google.android.gms.auth.api.Auth;
@@ -46,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
+                .addApi(Drive.API)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         signInButton = (SignInButton)findViewById(R.id.sign_in_button);
