@@ -323,6 +323,14 @@ public class MainActivity extends AppCompatActivity
     public void refresh(Intent data){
         //sync = false;
     if(!sync) {
+        /*Drive.DriveApi.fetchDriveId(mGoogleApiClient, FeedReaderContract.FeedEntry.DATABASE_NAME).setResultCallback(new ResultCallback<DriveApi.DriveIdResult>() {
+            @Override
+            public void onResult(@NonNull DriveApi.DriveIdResult driveIdResult) {
+                Global.mFileId = driveIdResult.getDriveId();
+                Global.mdriveFile = Global.mFileId.asDriveFile();
+            }
+        });
+        */
         Global.mFileId = data.getParcelableExtra(
                 OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
         mFileId = data.getParcelableExtra(
