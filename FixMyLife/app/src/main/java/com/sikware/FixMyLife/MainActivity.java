@@ -44,8 +44,12 @@ import com.google.android.gms.drive.DriveContents;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.DriveResource;
+import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
+import com.google.android.gms.drive.query.Filters;
+import com.google.android.gms.drive.query.Query;
+import com.google.android.gms.drive.query.SearchableField;
 import com.sikware.FixMyLife.main.SendBirdLoginActivity;
 import com.sikware.FixMyLife.main.SendBirdMainActivity;
 
@@ -80,7 +84,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private Bitmap mBitmapToSave;
     private DriveId mFileId;
-    boolean sync = false;
+    //Global.sync = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,15 +273,47 @@ public class MainActivity extends AppCompatActivity
         Global.mdriveFile.delete(mGoogleApiClient);
     }
 
+    public void findFile(){
+        Log.i(TAG, "Looking for file.");
+        Query query = new Query.Builder().addFilter(Filters.eq(SearchableField.TITLE, FeedReaderContract.FeedEntry.DATABASE_NAME))
+                .build();
+        Drive.DriveApi.query(mGoogleApiClient,query).setResultCallback(new
+           ResultCallback<DriveApi.MetadataBufferResult>() {
+               @Override
+               public void onResult(@NonNull DriveApi.MetadataBufferResult result) {
+                   if(!result.getStatus().isSuccess()){
+                       Log.d(TAG,"Problem retrieving Files...");
+                   }
+                   else{
+                       if(result.getMetadataBuffer().getCount()>0){
+                           Metadata md = result.getMetadataBuffer().get(0);
+                           Global.mFileId = md.getDriveId();
+                           Global.mdriveFile = Global.mFileId.asDriveFile();
+                            if(!Global.sync) {
+                                Global.mdriveFile.open(mGoogleApiClient, DriveFile.MODE_READ_ONLY, null)
+                                        .setResultCallback(openCallback);
+                                Global.sync = true;
+                            }
+                       }
+
+
+                   }
+               }
+           });
+
+    }
+
     public void uploadDriveFile(){
         // Start by creating a new contents, and setting a callback.
-        Log.i(TAG, "Creating new contents.");
+
         final Bitmap image = mBitmapToSave;
         Drive.DriveApi.newDriveContents(mGoogleApiClient)
                 .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
 
                     @Override
                     public void onResult(DriveApi.DriveContentsResult result) {
+                        File dbStream = null;
+                        byte[] b = null;
                         // If the operation was not successful, we cannot do anything
                         // and must
                         // fail.
@@ -285,15 +321,19 @@ public class MainActivity extends AppCompatActivity
                             Log.i(TAG, "Failed to create new contents.");
                             return;
                         }
-                        // Otherwise, we can write our data to the new contents.
-                        Log.i(TAG, "New contents created.");
-                        // Get an output stream for the contents.
                         OutputStream outputStream = result.getDriveContents().getOutputStream();
                         // Write the bitmap data from it.
+                        dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
                         try {
-                            File dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
-                            outputStream = new FileOutputStream(dbStream);
-                            byte[] b = readFileToByteArray(dbStream);
+                            //dbStream.toURL();
+                            b = readFileToByteArray(dbStream);
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        //image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
+                        try {
                             outputStream.write(b);
                         } catch (IOException e1) {
                             Log.i(TAG, "Unable to write file contents.");
@@ -301,43 +341,45 @@ public class MainActivity extends AppCompatActivity
                         // Create the initial metadata - MIME type and title.
                         // Note that the user will be able to change the title later.
                         MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-                                .setMimeType("application/x-binary")
-                                .setTitle(FeedReaderContract.FeedEntry.DATABASE_NAME).build();
+                                .setMimeType("application/x-binary").setTitle(FeedReaderContract.FeedEntry.DATABASE_NAME).build();
                         // Create an intent for the file chooser, and start it.
                         IntentSender intentSender = Drive.DriveApi
                                 .newCreateFileActivityBuilder()
                                 .setInitialMetadata(metadataChangeSet)
                                 .setInitialDriveContents(result.getDriveContents())
                                 .build(mGoogleApiClient);
-                        try {
-                            startIntentSenderForResult(
-                                    intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i(TAG, "Failed to launch file chooser.");
-                        }
+
+                        //Global.mFileId = result.getDriveContents().getDriveId();
+ //                       Global.mdriveFile = Global.mFileId.asDriveFile();
+
+//                        findFile();
                     }
                 });
-
+        //findFile();
     }
 
     public void refresh(Intent data){
         //sync = false;
-    if(!sync) {
+    findFile();
+/*        if(!Global.sync) {
         Global.mFileId = data.getParcelableExtra(
                 OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
         mFileId = data.getParcelableExtra(
                 OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
         Global.mdriveFile = mFileId.asDriveFile();
-        sync = true;
+        Global.sync = true;
     }
     else{
-        if(data==null){return;}
-        deleteDriveFile();
+*/     //   if(data==null){return;}
+        //deleteDriveFile();
+
         uploadDriveFile();
-        return;
+        //return;
+  //  }
+  //  Global.mdriveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY,null)
+  //              .setResultCallback(openCallback);
     }
-    Global.mdriveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY,null)
-                .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
+        ResultCallback openCallback = new ResultCallback<DriveApi.DriveContentsResult>() {
 
                     @Override
                     public void onResult(DriveApi.DriveContentsResult result) {
@@ -370,15 +412,15 @@ public class MainActivity extends AppCompatActivity
                             outputStream.flush();
                             bis.close();
                             outputStream.close();
-                            sync = true;
+                            Global.sync = true;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
-                });
+                };
 
 
-    }
+
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -394,7 +436,8 @@ public class MainActivity extends AppCompatActivity
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "API client connected.");
         //super.onConnected(connectionHint);
-        if (Global.mFileId == null) {
+        findFile();
+/*        if (Global.mFileId == null) {
             IntentSender intentSender = Drive.DriveApi
                     .newOpenFileActivityBuilder()
                    // .setMimeType(new String[] {"application/x-binary"})
@@ -408,9 +451,9 @@ public class MainActivity extends AppCompatActivity
         }
         else {
 //            if(sync){
-                refresh(null);
+  */              refresh(null);
 //            }
-        }
+    //    }
     }
 
     @Override

@@ -32,6 +32,7 @@ class Global extends Application {
     public static final String VERSION = "3.0.30";
     public static DriveId mFileId = null;
     public static DriveFile mdriveFile = null;
+    public static Boolean sync = false;
 
     @Override
     public void onCreate() {
