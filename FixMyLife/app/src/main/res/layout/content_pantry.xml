@@ -16,28 +16,6 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/urgent"
-            android:textSize="10sp" />
-
-        <ScrollView
-            android:id="@+id/urgent"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:clipToPadding="false"
-            android:fillViewport="true">
-
-            <LinearLayout
-                android:id="@+id/urgentItems"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bordersquare"
-                android:orientation="vertical" />
-        </ScrollView>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -84,7 +62,7 @@
             android:id="@+id/pantryHaveListView"
             style="@style/Widget.AppCompat.ListView"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:background="@drawable/border" />
 
         <LinearLayout
@@ -134,33 +112,21 @@
             android:id="@+id/pantryWantListView"
             style="@style/Widget.AppCompat.ListView"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:background="@drawable/border" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/iCantPick" />
-
-            <Button
-                android:id="@+id/scanItemButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/scan" />
-
-            <Button
                 android:id="@+id/addItemBtn"
-                android:layout_width="130dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:onClick="scanItem"
+                android:onClick="addItem"
                 android:text="@string/addNew" />
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 </LinearLayout>

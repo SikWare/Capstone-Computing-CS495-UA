@@ -67,26 +67,17 @@
                 android:orientation="vertical" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="15dp"
-                android:text="@string/iCantPick" />
-
-            <Button
                 android:id="@+id/addNoteBtn"
-                android:layout_width="130dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="25dp"
                 android:text="@string/addNew" />
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

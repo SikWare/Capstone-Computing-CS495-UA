@@ -21,7 +21,7 @@
 
     <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="291dp"
         android:layout_marginTop="8dp"
         tools:layout_editor_absoluteX="8dp"
         tools:layout_margin="8dp">
@@ -175,81 +175,47 @@
 
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/progress"
-            android:layout_width="150dp"
-            android:layout_height="115dp"
-            android:layout_column="0"
-            android:layout_margin="16dp"
-            android:layout_row="2"
-            android:tag="Progress"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="111dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/imageView5"
-                    android:layout_width="75dp"
-                    android:layout_height="65dp"
-                    android:layout_below="@+id/textView3"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="15dp"
-                    app:srcCompat="@drawable/progresschart" />
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#AAAAAA"
-                    android:elevation="0dp"
-                    android:text="@string/card5"
-                    android:textAlignment="center"
-                    android:typeface="sans" />
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/calendar"
-            android:layout_width="150dp"
-            android:layout_height="115dp"
-            android:layout_column="1"
-            android:layout_margin="16dp"
-            android:layout_row="2"
-            android:tag="Calendar"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="111dp">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/imageView6"
-                    android:layout_width="75dp"
-                    android:layout_height="65dp"
-                    android:layout_below="@+id/textView4"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"
-                    app:srcCompat="@drawable/calendar" />
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#AAAAAA"
-                    android:elevation="0dp"
-                    android:text="@string/card6"
-                    android:textAlignment="center"
-                    android:typeface="sans" />
-            </RelativeLayout>
-
-        </android.support.v7.widget.CardView>
 
     </GridLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/calendar"
+        android:layout_width="150dp"
+        android:layout_height="115dp"
+        android:layout_column="1"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="16dp"
+        android:layout_row="2"
+        android:tag="Calendar"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="111dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="75dp"
+                android:layout_height="65dp"
+                android:layout_below="@+id/textView4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                app:srcCompat="@drawable/calendar" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#AAAAAA"
+                android:elevation="0dp"
+                android:text="@string/card6"
+                android:textAlignment="center"
+                android:typeface="sans" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
 
 </LinearLayout>

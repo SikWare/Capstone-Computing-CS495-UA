@@ -47,7 +47,7 @@ public class Pantry extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        scanItemButton = (Button)findViewById(R.id.scanItemButton);
+        //scanItemButton = (Button)findViewById(R.id.scanItemButton);
         addItemButton = (Button)findViewById(R.id.addItemBtn);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
