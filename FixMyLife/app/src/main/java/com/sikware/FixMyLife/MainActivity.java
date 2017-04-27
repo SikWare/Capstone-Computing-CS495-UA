@@ -41,16 +41,24 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveContents;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.DriveResource;
 import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.drive.OpenFileActivityBuilder;
 import com.sikware.FixMyLife.main.SendBirdLoginActivity;
 import com.sikware.FixMyLife.main.SendBirdMainActivity;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -62,6 +70,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private static final int REQUEST_CODE_OPENER = 20;
     CardView c1,c2,c3,c4,c5,c6;
     private static final String TAG = "drive-quickstart";
     private static final int REQUEST_CODE_CAPTURE_IMAGE = 1;
@@ -70,7 +79,7 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleApiClient mGoogleApiClient;
     private Bitmap mBitmapToSave;
-
+    private DriveId mFileId;
 
 
     @Override
@@ -88,7 +97,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         c1 = (CardView)findViewById(R.id.pantry);
         c1.setOnClickListener(new View.OnClickListener() {
@@ -132,8 +140,6 @@ public class MainActivity extends AppCompatActivity
                 goTo(v);
             }
         });
-//        Global.mdb.openOrCreateDatabase(FeedReaderContract.FeedEntry.DATABASE_NAME,null);
-
 
     }
 
@@ -151,9 +157,10 @@ public class MainActivity extends AppCompatActivity
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .build();
-        // Connect the client. Once connected, the camera is launched.
-        mGoogleApiClient.connect();
+            // Connect the client. Once connected, the camera is launched.
         }
+        mGoogleApiClient.connect();
+        //}
     }
 
     @Override
@@ -261,109 +268,74 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
-            case REQUEST_CODE_CAPTURE_IMAGE:
-                // Called after a photo has been taken.
-                if (resultCode == Activity.RESULT_OK) {
-                    // Store the image data as a bitmap for writing later.
-//                    mBitmapToSave = (Bitmap) data.getExtras().get("data");
-                }
-                break;
-            case REQUEST_CODE_CREATOR:
-                // Called after a file is saved to Drive.
+            case REQUEST_CODE_OPENER:
                 if (resultCode == RESULT_OK) {
-                    Log.i(TAG, "Image successfully saved.");
-                    mBitmapToSave = null;
-                    // Just start the camera again for another photo.
-                    //startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-                    //        REQUEST_CODE_CAPTURE_IMAGE);
+                    Global.mFileId = data.getParcelableExtra(
+                            OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+                    mFileId = data.getParcelableExtra(
+                            OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+                    Global.mdriveFile = mFileId.asDriveFile();
+                    Global.mdriveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY,null)
+                            .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
+
+                                @Override
+                                public void onResult(DriveApi.DriveContentsResult result) {
+                                    // If the operation was not successful, we cannot do anything
+                                    // and must
+                                    // fail.
+
+                                    File dbStream = null;
+                                    byte[] buffer = new byte[1024];
+                                    int bytesread = 0;
+                                    byte[] b = new byte[0];
+
+                                    if (!result.getStatus().isSuccess()) {
+                                        Log.i(TAG, "Failed to create new contents.");
+                                        return;
+                                    }
+                                    // Otherwise, we can write our data to the new contents./
+                                    Log.i(TAG, "New contents created.");
+                                    // Get an output stream for the contents.
+                                    DriveContents contents = result.getDriveContents();
+
+                                    BufferedInputStream bis = new BufferedInputStream(contents.getInputStream());
+
+                                    try {
+                                        dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
+                                        FileOutputStream outputStream = new FileOutputStream(dbStream);
+                                        while((bytesread = bis.read(buffer))!=-1){
+                                            outputStream.write(buffer,0,bytesread);
+                                        }
+                                        outputStream.flush();
+                                        bis.close();
+                                        outputStream.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
                 }
-                break;
         }
     }
-
-    private void saveFileToDrive() {
-        // Start by creating a new contents, and setting a callback.
-        Log.i(TAG, "Creating new contents.");
-        Drive.DriveApi.newDriveContents(mGoogleApiClient)
-                .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
-
-                    @Override
-                    public void onResult(DriveApi.DriveContentsResult result) {
-                        // If the operation was not successful, we cannot do anything
-                        // and must
-                        // fail.
-
-                        File dbStream = null;
-                        byte[] buf = new byte[1024];
-                        int len;
-                        byte[] b = new byte[0];
-
-
-                        if (!result.getStatus().isSuccess()) {
-                            Log.i(TAG, "Failed to create new contents.");
-                            return;
-                        }
-                        // Otherwise, we can write our data to the new contents./
-                        Log.i(TAG, "New contents created.");
-                        DriveContents contents = result.getDriveContents();
-                        // Get an output stream for the contents.
-                        ParcelFileDescriptor pFile = contents.getParcelFileDescriptor();
-                        FileInputStream input = new FileInputStream(pFile.getFileDescriptor());
-                        try {
-                            input.read(new byte[input.available()]);
-                            FileOutputStream outputStream = new FileOutputStream(pFile.getFileDescriptor());
-                            Writer writer = new OutputStreamWriter(outputStream);
-//                            result.getDriveContents().getOutputStream();
-                            // Write the bitmap data from it.
-                            dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            //dbStream.toURL();
-                            b = readFileToByteArray(dbStream);
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        //image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
-//                        try {
-//                            Writer.write(b);
-//                        } catch (IOException e1) {
-//                            Log.i(TAG, "Unable to write file contents.");
-//                        }
-                        // Create the initial metadata - MIME type and title.
-                        // Note that the user will be able to change the title later.
-                        MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-                                .setMimeType("application/x-binary").setTitle(FeedReaderContract.FeedEntry.DATABASE_NAME).build();
-                        // Create an intent for the file chooser, and start it.
-                        IntentSender intentSender = Drive.DriveApi
-                                .newCreateFileActivityBuilder()
-                                .setInitialMetadata(metadataChangeSet)
-                                .setInitialDriveContents(result.getDriveContents())
-                                .build(mGoogleApiClient);
-                        try {
-                            startIntentSenderForResult(
-                                    intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i(TAG, "Failed to launch file chooser.");
-                        }
-                    }
-                });
-    }
-
 
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "API client connected.");
-        /*if (mBitmapToSave == null) {
-            // This activity has no UI of its own. Just start the camera.
-            //startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-            //        REQUEST_CODE_CAPTURE_IMAGE);
-            return;
-        }*/
-        saveFileToDrive();
+        //super.onConnected(connectionHint);
+        if (mFileId == null) {
+            IntentSender intentSender = Drive.DriveApi
+                    .newOpenFileActivityBuilder()
+                    .setMimeType(new String[] {"application/x-binary"})
+                    .build(mGoogleApiClient);
+            try {
+                startIntentSenderForResult(intentSender, REQUEST_CODE_OPENER,
+                        null, 0, 0, 0);
+            } catch (IntentSender.SendIntentException e) {
+                Log.w(TAG, "Unable to send intent", e);
+            }
+        } else {
+        }
     }
 
     @Override
@@ -390,5 +362,6 @@ public class MainActivity extends AppCompatActivity
             Log.e(TAG, "Exception while starting resolution activity", e);
         }
     }
+
 
 }
