@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity
         if (mFileId == null) {
             IntentSender intentSender = Drive.DriveApi
                     .newOpenFileActivityBuilder()
-                    .setMimeType(new String[] {"application/x-binary"})
+//                    .setMimeType(new String[] {"application/x-binary"})
                     .build(mGoogleApiClient);
             try {
                 startIntentSenderForResult(intentSender, REQUEST_CODE_OPENER,
