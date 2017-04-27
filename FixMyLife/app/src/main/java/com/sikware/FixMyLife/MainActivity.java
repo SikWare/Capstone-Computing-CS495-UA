@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    boolean stop;
     private static final int REQUEST_CODE_OPENER = 20;
     CardView c1,c2,c3,c4,c5,c6;
     private static final String TAG = "drive-quickstart";
@@ -271,7 +272,7 @@ public class MainActivity extends AppCompatActivity
 
     public void uploadDriveFile(){
         // Start by creating a new contents, and setting a callback.
-        Log.i(TAG, "Creating new contents.");
+        Log.i(TAG, "uploading new contents.");
         final Bitmap image = mBitmapToSave;
         Drive.DriveApi.newDriveContents(mGoogleApiClient)
                 .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
@@ -310,9 +311,11 @@ public class MainActivity extends AppCompatActivity
                                 .setInitialDriveContents(result.getDriveContents())
                                 .build(mGoogleApiClient);
                         try {
+                            if(!stop){
                             startIntentSenderForResult(
                                     intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException e) {
+                            }
+                        }catch (IntentSender.SendIntentException e) {
                             Log.i(TAG, "Failed to launch file chooser.");
                         }
                     }
@@ -323,6 +326,7 @@ public class MainActivity extends AppCompatActivity
     public void refresh(Intent data){
         //sync = false;
     if(!sync) {
+        if(data==null){
         /*Drive.DriveApi.fetchDriveId(mGoogleApiClient, FeedReaderContract.FeedEntry.DATABASE_NAME).setResultCallback(new ResultCallback<DriveApi.DriveIdResult>() {
             @Override
             public void onResult(@NonNull DriveApi.DriveIdResult driveIdResult) {
@@ -331,6 +335,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
         */
+        return;
+        }
         Global.mFileId = data.getParcelableExtra(
                 OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
         mFileId = data.getParcelableExtra(
@@ -339,10 +345,10 @@ public class MainActivity extends AppCompatActivity
         sync = true;
     }
     else{
-        if(data==null){return;}
+        if(Global.mFileId==null){return;}
         deleteDriveFile();
         uploadDriveFile();
-        return;
+//        return;
     }
     Global.mdriveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY,null)
                 .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
@@ -394,7 +400,11 @@ public class MainActivity extends AppCompatActivity
             case REQUEST_CODE_OPENER:
                 if (resultCode == RESULT_OK) {
                     refresh(data);
+                    stop = false;
                 }
+                break;
+            default:
+                stop = true;
         }
     }
 
