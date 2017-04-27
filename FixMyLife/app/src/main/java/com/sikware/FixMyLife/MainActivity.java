@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     private Bitmap mBitmapToSave;
     private DriveId mFileId;
-
+    boolean sync = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity
             // Connect the client. Once connected, the camera is launched.
         }
         mGoogleApiClient.connect();
-        //}
+
     }
 
     @Override
@@ -265,56 +265,127 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void deleteDriveFile(){
+        Global.mdriveFile.delete(mGoogleApiClient);
+    }
+
+    public void uploadDriveFile(){
+        // Start by creating a new contents, and setting a callback.
+        Log.i(TAG, "Creating new contents.");
+        final Bitmap image = mBitmapToSave;
+        Drive.DriveApi.newDriveContents(mGoogleApiClient)
+                .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
+
+                    @Override
+                    public void onResult(DriveApi.DriveContentsResult result) {
+                        // If the operation was not successful, we cannot do anything
+                        // and must
+                        // fail.
+                        if (!result.getStatus().isSuccess()) {
+                            Log.i(TAG, "Failed to create new contents.");
+                            return;
+                        }
+                        // Otherwise, we can write our data to the new contents.
+                        Log.i(TAG, "New contents created.");
+                        // Get an output stream for the contents.
+                        OutputStream outputStream = result.getDriveContents().getOutputStream();
+                        // Write the bitmap data from it.
+                        try {
+                            File dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
+                            outputStream = new FileOutputStream(dbStream);
+                            byte[] b = readFileToByteArray(dbStream);
+                            outputStream.write(b);
+                        } catch (IOException e1) {
+                            Log.i(TAG, "Unable to write file contents.");
+                        }
+                        // Create the initial metadata - MIME type and title.
+                        // Note that the user will be able to change the title later.
+                        MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
+                                .setMimeType("application/x-binary")
+                                .setTitle(FeedReaderContract.FeedEntry.DATABASE_NAME).build();
+                        // Create an intent for the file chooser, and start it.
+                        IntentSender intentSender = Drive.DriveApi
+                                .newCreateFileActivityBuilder()
+                                .setInitialMetadata(metadataChangeSet)
+                                .setInitialDriveContents(result.getDriveContents())
+                                .build(mGoogleApiClient);
+                        try {
+                            startIntentSenderForResult(
+                                    intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i(TAG, "Failed to launch file chooser.");
+                        }
+                    }
+                });
+
+    }
+
+    public void refresh(Intent data){
+        //sync = false;
+    if(!sync) {
+        Global.mFileId = data.getParcelableExtra(
+                OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+        mFileId = data.getParcelableExtra(
+                OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
+        Global.mdriveFile = mFileId.asDriveFile();
+        sync = true;
+    }
+    else{
+        if(data==null){return;}
+        deleteDriveFile();
+        uploadDriveFile();
+        return;
+    }
+    Global.mdriveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY,null)
+                .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
+
+                    @Override
+                    public void onResult(DriveApi.DriveContentsResult result) {
+                        // If the operation was not successful, we cannot do anything
+                        // and must
+                        // fail.
+
+                        File dbStream = null;
+                        byte[] buffer = new byte[1024];
+                        int bytesread = 0;
+                        byte[] b = new byte[0];
+
+                        if (!result.getStatus().isSuccess()) {
+                            Log.i(TAG, "Failed to create new contents.");
+                            return;
+                        }
+                        // Otherwise, we can write our data to the new contents./
+                        Log.i(TAG, "New contents created.");
+                        // Get an output stream for the contents.
+                        DriveContents contents = result.getDriveContents();
+
+                        BufferedInputStream bis = new BufferedInputStream(contents.getInputStream());
+
+                        try {
+                            dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
+                            FileOutputStream outputStream = new FileOutputStream(dbStream);
+                            while((bytesread = bis.read(buffer))!=-1){
+                                outputStream.write(buffer,0,bytesread);
+                            }
+                            outputStream.flush();
+                            bis.close();
+                            outputStream.close();
+                            sync = true;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+    }
+
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case REQUEST_CODE_OPENER:
                 if (resultCode == RESULT_OK) {
-                    Global.mFileId = data.getParcelableExtra(
-                            OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-                    mFileId = data.getParcelableExtra(
-                            OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-                    Global.mdriveFile = mFileId.asDriveFile();
-                    Global.mdriveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY,null)
-                            .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
-
-                                @Override
-                                public void onResult(DriveApi.DriveContentsResult result) {
-                                    // If the operation was not successful, we cannot do anything
-                                    // and must
-                                    // fail.
-
-                                    File dbStream = null;
-                                    byte[] buffer = new byte[1024];
-                                    int bytesread = 0;
-                                    byte[] b = new byte[0];
-
-                                    if (!result.getStatus().isSuccess()) {
-                                        Log.i(TAG, "Failed to create new contents.");
-                                        return;
-                                    }
-                                    // Otherwise, we can write our data to the new contents./
-                                    Log.i(TAG, "New contents created.");
-                                    // Get an output stream for the contents.
-                                    DriveContents contents = result.getDriveContents();
-
-                                    BufferedInputStream bis = new BufferedInputStream(contents.getInputStream());
-
-                                    try {
-                                        dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
-                                        FileOutputStream outputStream = new FileOutputStream(dbStream);
-                                        while((bytesread = bis.read(buffer))!=-1){
-                                            outputStream.write(buffer,0,bytesread);
-                                        }
-                                        outputStream.flush();
-                                        bis.close();
-                                        outputStream.close();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-
+                    refresh(data);
                 }
         }
     }
@@ -323,10 +394,10 @@ public class MainActivity extends AppCompatActivity
     public void onConnected(Bundle connectionHint) {
         Log.i(TAG, "API client connected.");
         //super.onConnected(connectionHint);
-        if (mFileId == null) {
+        if (Global.mFileId == null) {
             IntentSender intentSender = Drive.DriveApi
                     .newOpenFileActivityBuilder()
-                    .setMimeType(new String[] {"application/x-binary"})
+                   // .setMimeType(new String[] {"application/x-binary"})
                     .build(mGoogleApiClient);
             try {
                 startIntentSenderForResult(intentSender, REQUEST_CODE_OPENER,
@@ -334,7 +405,11 @@ public class MainActivity extends AppCompatActivity
             } catch (IntentSender.SendIntentException e) {
                 Log.w(TAG, "Unable to send intent", e);
             }
-        } else {
+        }
+        else {
+//            if(sync){
+                refresh(null);
+//            }
         }
     }
 
