@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.claudiodegio.dbsync.DBSync;
+import com.claudiodegio.dbsync.*;
 import com.claudiodegio.dbsync.TableToSync;
 import com.claudiodegio.dbsync.provider.CloudProvider;
 import com.claudiodegio.dbsync.provider.GDriveCloudProvider;
@@ -64,9 +65,12 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseMainDBActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -82,9 +86,12 @@ public class MainActivity extends AppCompatActivity
     private DriveId mFileId;
     boolean sync = false;
 
+    public void onPostSelectFile() {}
+    public void onPostSync() {}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -141,25 +148,37 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        String dbName = FeedReaderContract.FeedEntry.DATABASE_NAME;
+
+
+        Global.mFileId = DriveId.decodeFromString(Global.mFileIDString);
+
+        CloudProvider gDriveProvider = new GDriveCloudProvider.Builder(this.getBaseContext())
+                .setSyncFileByDriveId(Global.mFileId)   //documentation lists it as driveID
+                .setGoogleApiClient(mGoogleApiClient)
+                .build();
+
+        dbSync = new DBSync.Builder(this.getBaseContext())
+                .setCloudProvider(gDriveProvider)
+                .setSQLiteDatabase(Global.mDbHelper.getReadableDatabase())
+                .setDataBaseName(dbName)
+                .addTable(new TableToSync.Builder(FeedReaderContract.FeedEntry.TABLE_NAME_MEDIA_HAVE).build())
+                .addTable(new TableToSync.Builder(FeedReaderContract.FeedEntry.TABLE_NAME_MEDIA_WANT).build())
+                .addTable(new TableToSync.Builder(FeedReaderContract.FeedEntry.TABLE_NAME_PANTRY_HAVE).build())
+                .addTable(new TableToSync.Builder(FeedReaderContract.FeedEntry.TABLE_NAME_PANTRY_WANT).build())
+                .addTable(new TableToSync.Builder(FeedReaderContract.FeedEntry.TABLE_NAME_NOTES_HAVE).build())
+                .addTable(new TableToSync.Builder(FeedReaderContract.FeedEntry.TABLE_NAME_NOTES_WANT).build())//Not sure what to do here
+                .setSchemaVersion(2)
+                .build();
+
+
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mGoogleApiClient == null) {
-            // Create the API client and bind it to an instance variable.
-            // We use this instance as the callback for connection and connection
-            // failures.
-            // Since no account name is passed, the user is prompted to choose.
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(Drive.API)
-                    .addScope(Drive.SCOPE_FILE)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
-            // Connect the client. Once connected, the camera is launched.
-        }
-        mGoogleApiClient.connect();
+        dbSync.sync();
 
     }
 
@@ -263,187 +282,6 @@ public class MainActivity extends AppCompatActivity
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         return true;
-    }
-
-    public void deleteDriveFile(){
-        Global.mdriveFile.delete(mGoogleApiClient);
-    }
-
-    public void uploadDriveFile(){
-        // Start by creating a new contents, and setting a callback.
-        Log.i(TAG, "Creating new contents.");
-        final Bitmap image = mBitmapToSave;
-        Drive.DriveApi.newDriveContents(mGoogleApiClient)
-                .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
-
-                    @Override
-                    public void onResult(DriveApi.DriveContentsResult result) {
-                        // If the operation was not successful, we cannot do anything
-                        // and must
-                        // fail.
-                        if (!result.getStatus().isSuccess()) {
-                            Log.i(TAG, "Failed to create new contents.");
-                            return;
-                        }
-                        // Otherwise, we can write our data to the new contents.
-                        Log.i(TAG, "New contents created.");
-                        // Get an output stream for the contents.
-                        OutputStream outputStream = result.getDriveContents().getOutputStream();
-                        // Write the bitmap data from it.
-                        try {
-                            File dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
-                            outputStream = new FileOutputStream(dbStream);
-                            byte[] b = readFileToByteArray(dbStream);
-                            outputStream.write(b);
-                        } catch (IOException e1) {
-                            Log.i(TAG, "Unable to write file contents.");
-                        }
-                        // Create the initial metadata - MIME type and title.
-                        // Note that the user will be able to change the title later.
-                        MetadataChangeSet metadataChangeSet = new MetadataChangeSet.Builder()
-                                .setMimeType("application/x-binary")
-                                .setTitle(FeedReaderContract.FeedEntry.DATABASE_NAME).build();
-                        // Create an intent for the file chooser, and start it.
-                        IntentSender intentSender = Drive.DriveApi
-                                .newCreateFileActivityBuilder()
-                                .setInitialMetadata(metadataChangeSet)
-                                .setInitialDriveContents(result.getDriveContents())
-                                .build(mGoogleApiClient);
-                        try {
-                            startIntentSenderForResult(
-                                    intentSender, REQUEST_CODE_CREATOR, null, 0, 0, 0);
-                        } catch (IntentSender.SendIntentException e) {
-                            Log.i(TAG, "Failed to launch file chooser.");
-                        }
-                    }
-                });
-
-    }
-
-    public void refresh(Intent data){
-        //sync = false;
-    if(!sync) {
-        /*Drive.DriveApi.fetchDriveId(mGoogleApiClient, FeedReaderContract.FeedEntry.DATABASE_NAME).setResultCallback(new ResultCallback<DriveApi.DriveIdResult>() {
-            @Override
-            public void onResult(@NonNull DriveApi.DriveIdResult driveIdResult) {
-                Global.mFileId = driveIdResult.getDriveId();
-                Global.mdriveFile = Global.mFileId.asDriveFile();
-            }
-        });
-        */
-        Global.mFileId = data.getParcelableExtra(
-                OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-        mFileId = data.getParcelableExtra(
-                OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-        Global.mdriveFile = mFileId.asDriveFile();
-        sync = true;
-    }
-    else{
-        if(data==null){return;}
-        deleteDriveFile();
-        uploadDriveFile();
-        return;
-    }
-    Global.mdriveFile.open(mGoogleApiClient,DriveFile.MODE_READ_ONLY,null)
-                .setResultCallback(new ResultCallback<DriveApi.DriveContentsResult>() {
-
-                    @Override
-                    public void onResult(DriveApi.DriveContentsResult result) {
-                        // If the operation was not successful, we cannot do anything
-                        // and must
-                        // fail.
-
-                        File dbStream = null;
-                        byte[] buffer = new byte[1024];
-                        int bytesread = 0;
-                        byte[] b = new byte[0];
-
-                        if (!result.getStatus().isSuccess()) {
-                            Log.i(TAG, "Failed to create new contents.");
-                            return;
-                        }
-                        // Otherwise, we can write our data to the new contents./
-                        Log.i(TAG, "New contents created.");
-                        // Get an output stream for the contents.
-                        DriveContents contents = result.getDriveContents();
-
-                        BufferedInputStream bis = new BufferedInputStream(contents.getInputStream());
-
-                        try {
-                            dbStream = new File(getApplicationContext().getDatabasePath(FeedReaderContract.FeedEntry.DATABASE_NAME).toString());
-                            FileOutputStream outputStream = new FileOutputStream(dbStream);
-                            while((bytesread = bis.read(buffer))!=-1){
-                                outputStream.write(buffer,0,bytesread);
-                            }
-                            outputStream.flush();
-                            bis.close();
-                            outputStream.close();
-                            sync = true;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-
-    }
-
-    @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_OPENER:
-                if (resultCode == RESULT_OK) {
-                    refresh(data);
-                }
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.i(TAG, "API client connected.");
-        //super.onConnected(connectionHint);
-        if (Global.mFileId == null) {
-            IntentSender intentSender = Drive.DriveApi
-                    .newOpenFileActivityBuilder()
-                   // .setMimeType(new String[] {"application/x-binary"})
-                    .build(mGoogleApiClient);
-            try {
-                startIntentSenderForResult(intentSender, REQUEST_CODE_OPENER,
-                        null, 0, 0, 0);
-            } catch (IntentSender.SendIntentException e) {
-                Log.w(TAG, "Unable to send intent", e);
-            }
-        }
-        else {
-//            if(sync){
-                refresh(null);
-//            }
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Log.i(TAG, "GoogleApiClient connection suspended");
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // Called whenever the API client fails to connect.
-        Log.i(TAG, "GoogleApiClient connection failed: " + result.toString());
-        if (!result.hasResolution()) {
-            // show the localized error dialog.
-            GoogleApiAvailability.getInstance().getErrorDialog(this, result.getErrorCode(), 0).show();
-            return;
-        }
-        // The failure has a resolution. Resolve it.
-        // Called typically when the app is not yet authorized, and an
-        // authorization
-        // dialog is displayed to the user.
-        try {
-            result.startResolutionForResult(this, REQUEST_CODE_RESOLUTION);
-        } catch (IntentSender.SendIntentException e) {
-            Log.e(TAG, "Exception while starting resolution activity", e);
-        }
     }
 
 

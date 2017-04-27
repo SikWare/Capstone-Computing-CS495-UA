@@ -31,6 +31,7 @@ class Global extends Application {
     private static final String APP_ID = "BDCD4D3E-2E3A-4CB7-A108-DB19B465B31F";
     public static final String VERSION = "3.0.30";
     public static DriveId mFileId = null;
+    public static String mFileIDString = "0B5VYwfLHbWjnZ1dHUk9kZ0VKNEE"; //dbFileKen
     public static DriveFile mdriveFile = null;
 
     @Override
