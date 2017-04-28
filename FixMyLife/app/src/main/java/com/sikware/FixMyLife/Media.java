@@ -1,5 +1,6 @@
 package com.sikware.FixMyLife;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,6 +24,10 @@ import android.widget.RadioButton;
 
 import com.sikware.FixMyLife.FeedReaderContract.FeedEntry;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.UUID;
+
 
 public class Media extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,6 +35,7 @@ public class Media extends AppCompatActivity
     Button addMediaBtn;
     ListView mediaHave, mediaWant;
     SQLiteDatabase db;
+    private static Context context;
 
 
     @Override
@@ -47,6 +53,8 @@ public class Media extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Media.context = getApplicationContext();
 
         addMediaBtn = (Button)findViewById(R.id.addMediaBtn);
         addMediaBtn.setOnClickListener(new View.OnClickListener() {
@@ -160,6 +168,20 @@ public class Media extends AppCompatActivity
                 // insert to db
                 boolean b = ((RadioButton)a.findViewById(R.id.addMediaItemRadioHave)).isChecked();
                 Global.mDbHelper.insertMediaItem(b,db);
+
+                //mysql
+                //Will more than likely need to update to accomodate obj
+
+                String owned = b?"1":"0";
+                String mediaID =  UUID.randomUUID().toString();
+                try {
+                    String query = "?table=media&id="+ mediaID + "&name=" + URLEncoder.encode(name, "UTF-8") + "&type=" + URLEncoder.encode(type, "UTF-8") +
+                            "&platform=" + URLEncoder.encode(platform, "UTF-8") + "&owned=" + owned;
+                    DBAdapter addItem = new DBAdapter(context,"insertItem.php",query);
+                    addItem.execute();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
                 loadLists();
 
