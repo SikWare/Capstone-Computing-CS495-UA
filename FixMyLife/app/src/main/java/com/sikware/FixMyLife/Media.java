@@ -182,7 +182,8 @@ public class Media extends AppCompatActivity
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-
+                DBAdapter getOwnedItems = new DBAdapter(context, "selectItem.php","?table=media&owned=1");
+                getOwnedItems.execute();
                 loadLists();
 
             }

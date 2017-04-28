@@ -27,15 +27,16 @@ import java.net.URLEncoder;
 public class DBAdapter extends AsyncTask<String, Void, String>{
     private final String TAG = "addMediaItem";
     private Context context;
-    private int Dispatch;
+    private int dispatch;
     private String query;
     private String phpFile;
 
 
-    public DBAdapter(Context context, String phpFile, String query) { //removed context
-        this.context = context;
+    public DBAdapter(Context context, String phpFile, String query) {
         this.query = query;
         this.phpFile = phpFile;
+        this.context = context;
+        this.dispatch = dispatch;
     }
 
     protected void onPreExecute(){
@@ -66,24 +67,9 @@ public class DBAdapter extends AsyncTask<String, Void, String>{
         String jsonStr = result;
         Log.d(TAG,result);
 
-        if (jsonStr != null) {
-            try {
-                JSONObject jsonObj = new JSONObject(jsonStr);
-                String query_result = jsonObj.getString("query_result");
-                if (query_result.equals("SUCCESS")) {
-                    Toast.makeText(context, "Data inserted successfully. Signup successful.", Toast.LENGTH_SHORT).show();
-                } else if (query_result.equals("FAILURE")) {
-                    Toast.makeText(context, "Data could not be inserted. Signup failed.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "Couldn't connect to remote database.", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(context, "Error parsing JSON data.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(context, "Couldn't get any JSON data.", Toast.LENGTH_SHORT).show();
-        }
+
+
+
     }
 
 
