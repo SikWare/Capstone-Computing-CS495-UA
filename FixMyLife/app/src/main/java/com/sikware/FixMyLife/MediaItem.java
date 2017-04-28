@@ -29,7 +29,7 @@ class MediaItem {
 
 
     }
-
+    @Override
     public String toString(){
         String s = name + ";" + type + ";" + platform + ";" + genre + ";" + isBought;
         return s;

@@ -9,6 +9,8 @@ import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
 import com.sendbird.android.SendBird;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,12 +21,22 @@ class Global extends Application {
     // bob is just for testing purposes
     static User u = new User("bob", "sikwarefromthatguy@gmail.com", UUID.randomUUID(), 0);
 
-
+    //items
     static PantryItem pantryItem = null;
     static MediaItem mediaItem = null;
     static NotesItem notesItem = null;
     static GoogleSignInAccount acct;
-    static DBHelper mDbHelper = null;//
+    static DBHelper mDbHelper = null;
+
+    //itemArrays
+    static List<MediaItem> mediaHaveArray = new ArrayList<MediaItem>();
+    static List<MediaItem> mediaWantArray = new ArrayList<MediaItem>();
+
+    static List<PantryItem> pantryHaveArray = new ArrayList<PantryItem>();
+    static List<PantryItem> pantryWantArray = new ArrayList<PantryItem>();
+
+    static List<NotesItem> notesArray = new ArrayList<NotesItem>();
+
 
     // stuff for send bird
     //private static final String APP_ID = "9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23"; // US-1 Demo

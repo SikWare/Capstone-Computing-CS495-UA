@@ -70,6 +70,7 @@ import java.net.MalformedURLException;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -144,11 +145,16 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        DBLoad loadItems = new DBLoad(this, "selectItem.php", "?table=media");
+        loadItems.execute();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        DBLoad loadItems = new DBLoad(this, "selectItem.php", "?table=media");
+        loadItems.execute();
     }
 
     @Override

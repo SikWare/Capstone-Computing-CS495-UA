@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,7 +29,9 @@ import com.sikware.FixMyLife.FeedReaderContract.FeedEntry;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.UUID;
+
 
 
 public class Media extends AppCompatActivity
@@ -36,6 +41,8 @@ public class Media extends AppCompatActivity
     ListView mediaHave, mediaWant;
     SQLiteDatabase db;
     private static Context context;
+
+    private ArrayAdapter<MediaItem> adapter;
 
 
     @Override
@@ -51,12 +58,15 @@ public class Media extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        //DBLoad loadItems = new DBLoad(context, "selectItem.php", "?table=media");
+        //loadItems.execute();
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Media.context = getApplicationContext();
 
-        addMediaBtn = (Button)findViewById(R.id.addMediaBtn);
+        addMediaBtn = (Button) findViewById(R.id.addMediaBtn);
         addMediaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,19 +77,25 @@ public class Media extends AppCompatActivity
         db = Global.mDbHelper.getWritableDatabase();
 
         loadLists();
+        adapter.notifyDataSetChanged();
 
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        if(!db.isOpen()){
+        if (!db.isOpen()) {
             db = Global.mDbHelper.getWritableDatabase();
+
+            loadLists();
+            adapter.notifyDataSetChanged();
         }
 
     }
+
     @Override
-    public void onPause(){
-        if(db.isOpen()){
+    public void onPause() {
+        if (db.isOpen()) {
             db.close();
         }
         super.onPause();
@@ -142,10 +158,10 @@ public class Media extends AppCompatActivity
         return true;
     }
 
-    void addItem(View view){
+    void addItem(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.add_media_item_layout,null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
+        builder.setView(inflater.inflate(R.layout.add_media_item_layout, null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //send data back from dialog
@@ -154,37 +170,38 @@ public class Media extends AppCompatActivity
 
                 AlertDialog a = (AlertDialog) dialog;
 //                Context context = getApplicationContext();
-                EditText Ename = (EditText)a.findViewById(R.id.mediaNameItem);
+                EditText Ename = (EditText) a.findViewById(R.id.mediaNameItem);
                 String name = Ename.getText().toString();
-                String type = ((EditText)a.findViewById(R.id.mediaTypeItem)).getText().toString();
-                String platform = ((EditText)a.findViewById(R.id.mediaPlatformItem)).getText().toString();
-                String genre = ((EditText)a.findViewById(R.id.mediaGenreItem)).getText().toString();
-                String bought = ((RadioButton)a.findViewById(R.id.addMediaItemRadioHave)).isChecked()?"x":"o";
+                String type = ((EditText) a.findViewById(R.id.mediaTypeItem)).getText().toString();
+                String platform = ((EditText) a.findViewById(R.id.mediaPlatformItem)).getText().toString();
+                String genre = ((EditText) a.findViewById(R.id.mediaGenreItem)).getText().toString();
+                String bought = ((RadioButton) a.findViewById(R.id.addMediaItemRadioHave)).isChecked() ? "x" : "o";
                 //MediaItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
-                Global.mediaItem = new MediaItem(Global.getUser().groupID,name,type,platform,genre,bought);
+                Global.mediaItem = new MediaItem(Global.getUser().groupID, name, type, platform, genre, bought);
                 //after creating item we set to global to keep in memory
-                Log.d("item",Global.mediaItem.toString());
+                //Log.d("item",Global.mediaItem.toString());
 
                 // insert to db
-                boolean b = ((RadioButton)a.findViewById(R.id.addMediaItemRadioHave)).isChecked();
-                Global.mDbHelper.insertMediaItem(b,db);
+                boolean b = ((RadioButton) a.findViewById(R.id.addMediaItemRadioHave)).isChecked();
+                Global.mDbHelper.insertMediaItem(b, db);
 
                 //mysql
                 //Will more than likely need to update to accomodate obj
 
-                String owned = b?"1":"0";
-                String mediaID =  UUID.randomUUID().toString();
+                String owned = b ? "1" : "0";
+                String mediaID = UUID.randomUUID().toString();
                 try {
-                    String query = "?table=media&id="+ mediaID + "&name=" + URLEncoder.encode(name, "UTF-8") + "&type=" + URLEncoder.encode(type, "UTF-8") +
-                            "&platform=" + URLEncoder.encode(platform, "UTF-8") + "&owned=" + owned;
-                    DBAdapter addItem = new DBAdapter(context,"insertItem.php",query);
+                    String query = "?table=media&id=" + mediaID + "&name=" + URLEncoder.encode(name, "UTF-8") + "&type=" + URLEncoder.encode(type, "UTF-8") +
+                            "&platform=" + URLEncoder.encode(platform, "UTF-8") + "&genre=" + URLEncoder.encode(genre, "UTF-8") + "&owned=" + owned;
+                    DBInsert addItem = new DBInsert(context, "insertItem.php", query, false);
                     addItem.execute();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                DBAdapter getOwnedItems = new DBAdapter(context, "selectItem.php","?table=media&owned=1");
-                getOwnedItems.execute();
-                loadLists();
+
+                //DBLoad loadItems = new DBLoad(context,"selectItem.php","?table=media");
+                //loadItems.execute();
+                //loadLists();
 
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -202,30 +219,54 @@ public class Media extends AppCompatActivity
         dialog.show();
     }
 
-    private void loadLists(){
-        if(db.isOpen()== false){
-            db.openOrCreateDatabase(FeedEntry.DATABASE_NAME,null);
-        }
+    private void loadLists() {
+        //        db.openOrCreateDatabase(FeedEntry.DATABASE_NAME,null);
+        //            if(db.isOpen()== false){
+        //    }
 
-        Cursor haveCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEDIA_HAVE, null);
-        MediaCursorAdapter mediaAdapterH = new MediaCursorAdapter(this, R.layout.media_item_view,haveCursor);
+        //Cursor haveCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEDIA_HAVE, null);
+        //MediaCursorAdapter mediaAdapterH = new MediaCursorAdapter(this, R.layout.media_item_view,haveCursor);
 
-        mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
-        mediaHave.setAdapter(mediaAdapterH);
+        //mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
+        //mediaHave.setAdapter(mediaAdapterH);
 
         // if we want to change items in list view we do this
-        mediaAdapterH.changeCursor(haveCursor);
+        //mediaAdapterH.changeCursor(haveCursor);
 
-        Cursor wantCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEDIA_WANT, null);
-        MediaCursorAdapter mediaAdapterW = new MediaCursorAdapter(this, R.layout.media_item_view,wantCursor);
+        //    Cursor wantCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEDIA_WANT, null);
+        //    MediaCursorAdapter mediaAdapterW = new MediaCursorAdapter(this, R.layout.media_item_view,wantCursor);
 
-        mediaWant = (ListView)findViewById(R.id.mediaWantListView);
-        mediaWant.setAdapter(mediaAdapterW);
+        //    mediaWant = (ListView)findViewById(R.id.mediaWantListView);
+        //    mediaWant.setAdapter(mediaAdapterW);
 
-        mediaAdapterW.changeCursor(wantCursor);
+        //    mediaAdapterW.changeCursor(wantCursor);
+
+        mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
+
+        adapter = new ArrayAdapter<MediaItem>(this, android.R.layout.simple_list_item_1, Global.mediaHaveArray);
+        mediaHave.setAdapter(adapter);
+
+        DBLoad loadItems = new DBLoad(context, "selectItem.php", "?table=media",adapter);
+        loadItems.execute();
 
     }
 
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
