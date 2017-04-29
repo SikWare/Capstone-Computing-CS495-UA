@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DBLoad loadItems = new DBLoad(this, "selectItem.php", "?table=media");
+        DBLoad loadItems = new DBLoad(this, Global.SELECT_PHP, Global.MEDIA_TABLE);
         loadItems.execute();
 
     }

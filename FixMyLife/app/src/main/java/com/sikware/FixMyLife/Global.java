@@ -1,16 +1,9 @@
 package com.sikware.FixMyLife;
 
 import android.app.Application;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcelable;
-
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveId;
 import com.sendbird.android.SendBird;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -29,22 +22,23 @@ class Global extends Application {
     static DBHelper mDbHelper = null;
 
     //itemArrays
-    static List<MediaItem> mediaHaveArray = new ArrayList<MediaItem>();
-    static List<MediaItem> mediaWantArray = new ArrayList<MediaItem>();
+    static ArrayList<MediaItem> mediaHaveArray = new ArrayList<MediaItem>();
+    static ArrayList<MediaItem> mediaWantArray = new ArrayList<MediaItem>();
+    static ArrayList<PantryItem> pantryHaveArray = new ArrayList<PantryItem>();
+    static ArrayList<PantryItem> pantryWantArray = new ArrayList<PantryItem>();
+    static ArrayList<NotesItem> notesArray = new ArrayList<NotesItem>();
 
-    static List<PantryItem> pantryHaveArray = new ArrayList<PantryItem>();
-    static List<PantryItem> pantryWantArray = new ArrayList<PantryItem>();
+    //strings for mySQL
+    static final String INSERT_PHP = "insertItem.php";
+    static final String SELECT_PHP = "selectItem.php";
 
-    static List<NotesItem> notesArray = new ArrayList<NotesItem>();
+
+    static final String MEDIA_TABLE = "?table=media";
 
 
     // stuff for send bird
-    //private static final String APP_ID = "9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23"; // US-1 Demo
     private static final String APP_ID = "BDCD4D3E-2E3A-4CB7-A108-DB19B465B31F";
     public static final String VERSION = "3.0.30";
-    public static DriveId mFileId = null;
-    public static DriveFile mdriveFile = null;
-    public static Boolean sync = false;
 
     @Override
     public void onCreate() {

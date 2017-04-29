@@ -17,10 +17,9 @@ class MediaItem {
     String genre;
     String isBought;
 
-    public MediaItem( UUID ownerID, String name, String type, String platform, String genre, String bought) {
+    public MediaItem( UUID id, String name, String type, String platform, String genre, String bought) {
 
-        this.id = UUID.randomUUID();
-        this.ownerID = ownerID;
+        this.id = id;
         this.name = name;
         this.type = type;
         this.platform = platform;

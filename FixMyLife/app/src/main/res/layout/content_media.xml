@@ -17,36 +17,35 @@
         tools:layout_editor_absoluteY="8dp">
 
 
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/haveMedia"
+                android:id="@+id/nameTextH"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/have" />
+                android:text="Name:" />
 
             <TextView
-                android:id="@+id/qtyMedia"
+                android:id="@+id/typeTextH"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="false"
-                android:layout_centerHorizontal="false"
+                android:layout_weight="1"
+                android:text="Type:" />
+
+            <TextView
+                android:id="@+id/platformTextH"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/platform" />
 
             <TextView
-                android:id="@+id/priorMedia"
+                android:id="@+id/genreTextH"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentRight="false"
-                android:layout_alignParentTop="false"
                 android:layout_weight="1"
                 android:text="@string/genre" />
         </LinearLayout>
@@ -56,7 +55,7 @@
             android:id="@+id/mediaHaveListView"
             style="@style/Widget.AppCompat.ListView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="190dp"
             android:background="@drawable/border" />
 
         <LinearLayout
@@ -64,37 +63,39 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/havePantry2"
+                android:id="@+id/nameTextW"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/want" />
+                android:text="Name:" />
 
             <TextView
-                android:id="@+id/qtyPantry2"
+                android:id="@+id/typeTextW"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="false"
-                android:layout_centerHorizontal="true"
+                android:layout_weight="1"
+                android:text="Type:" />
+
+            <TextView
+                android:id="@+id/platformTextW"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/platform" />
 
             <TextView
-                android:id="@+id/prioPantry2"
+                android:id="@+id/genreTextW"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="false"
-                android:layout_alignParentRight="false"
-                android:layout_alignParentTop="false"
                 android:layout_weight="1"
                 android:text="@string/genre" />
         </LinearLayout>
 
         <ListView
+            android:id="@+id/mediaWantListView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@drawable/border"
-            android:id="@+id/mediaWantListView"/>
+            android:layout_height="190dp"
+            android:background="@drawable/border" />
 
 
         <RelativeLayout
@@ -110,5 +111,12 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView" />
 
 </LinearLayout>

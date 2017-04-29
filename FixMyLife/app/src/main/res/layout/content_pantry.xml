@@ -28,7 +28,7 @@
                 android:text="@string/have" />
 
             <TextView
-                android:id="@+id/qtyMedia"
+                android:id="@+id/platformTextH"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -43,7 +43,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="43dp"
                 android:layout_marginStart="43dp"
-                android:layout_toRightOf="@+id/qtyMedia"
+                android:layout_toRightOf="@+id/platformTextH"
                 android:layout_weight="1"
                 android:text="@string/unit" />
 
@@ -77,7 +77,7 @@
                 android:text="@string/want" />
 
             <TextView
-                android:id="@+id/qtyPantry2"
+                android:id="@+id/typeTextW"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -92,8 +92,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="43dp"
                 android:layout_marginStart="43dp"
-                android:layout_toEndOf="@+id/qtyPantry2"
-                android:layout_toRightOf="@+id/qtyPantry2"
+                android:layout_toEndOf="@+id/typeTextW"
+                android:layout_toRightOf="@+id/typeTextW"
                 android:layout_weight="1"
                 android:text="@string/unit" />
 

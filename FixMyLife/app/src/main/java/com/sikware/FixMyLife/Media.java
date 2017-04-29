@@ -39,10 +39,12 @@ public class Media extends AppCompatActivity
 
     Button addMediaBtn;
     ListView mediaHave, mediaWant;
-    SQLiteDatabase db;
     private static Context context;
 
-    private ArrayAdapter<MediaItem> adapter;
+    MediaAdapter haveAdapter;
+    MediaAdapter wantAdapter;
+
+
 
 
     @Override
@@ -58,9 +60,6 @@ public class Media extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        //DBLoad loadItems = new DBLoad(context, "selectItem.php", "?table=media");
-        //loadItems.execute();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -74,30 +73,22 @@ public class Media extends AppCompatActivity
             }
         });
 
-        db = Global.mDbHelper.getWritableDatabase();
-
+        new DBLoad(this, Global.SELECT_PHP, Global.MEDIA_TABLE).execute();
         loadLists();
-        adapter.notifyDataSetChanged();
-
     }
 
-    @Override
+        @Override
     public void onResume() {
         super.onResume();
-        if (!db.isOpen()) {
-            db = Global.mDbHelper.getWritableDatabase();
+            haveAdapter.setListData(Global.mediaHaveArray);
+            haveAdapter.notifyDataSetChanged();
+            wantAdapter.setListData(Global.mediaWantArray);
+            wantAdapter.notifyDataSetChanged();
 
-            loadLists();
-            adapter.notifyDataSetChanged();
         }
-
-    }
 
     @Override
     public void onPause() {
-        if (db.isOpen()) {
-            db.close();
-        }
         super.onPause();
     }
 
@@ -164,44 +155,32 @@ public class Media extends AppCompatActivity
         builder.setView(inflater.inflate(R.layout.add_media_item_layout, null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //send data back from dialog
-
-                // Gets the data repository in write mode
 
                 AlertDialog a = (AlertDialog) dialog;
-//                Context context = getApplicationContext();
                 EditText Ename = (EditText) a.findViewById(R.id.mediaNameItem);
                 String name = Ename.getText().toString();
                 String type = ((EditText) a.findViewById(R.id.mediaTypeItem)).getText().toString();
                 String platform = ((EditText) a.findViewById(R.id.mediaPlatformItem)).getText().toString();
                 String genre = ((EditText) a.findViewById(R.id.mediaGenreItem)).getText().toString();
-                String bought = ((RadioButton) a.findViewById(R.id.addMediaItemRadioHave)).isChecked() ? "x" : "o";
-                //MediaItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
-                Global.mediaItem = new MediaItem(Global.getUser().groupID, name, type, platform, genre, bought);
-                //after creating item we set to global to keep in memory
-                //Log.d("item",Global.mediaItem.toString());
-
-                // insert to db
-                boolean b = ((RadioButton) a.findViewById(R.id.addMediaItemRadioHave)).isChecked();
-                Global.mDbHelper.insertMediaItem(b, db);
+                String bought = ((RadioButton) a.findViewById(R.id.addMediaItemRadioHave)).isChecked() ? "1" : "0";
 
                 //mysql
                 //Will more than likely need to update to accomodate obj
 
-                String owned = b ? "1" : "0";
-                String mediaID = UUID.randomUUID().toString();
+                UUID mediaID = UUID.randomUUID();
+                Global.mediaItem  = new MediaItem(mediaID, name, type, platform, genre, bought);
+
+                if (bought == "1") { Global.mediaHaveArray.add(Global.mediaItem); }
+                else { Global.mediaWantArray.add(Global.mediaItem); }
+
                 try {
-                    String query = "?table=media&id=" + mediaID + "&name=" + URLEncoder.encode(name, "UTF-8") + "&type=" + URLEncoder.encode(type, "UTF-8") +
-                            "&platform=" + URLEncoder.encode(platform, "UTF-8") + "&genre=" + URLEncoder.encode(genre, "UTF-8") + "&owned=" + owned;
+                    String query = "?table=media&id=" + mediaID.toString() + "&name=" + URLEncoder.encode(name, "UTF-8") + "&type=" + URLEncoder.encode(type, "UTF-8") +
+                            "&platform=" + URLEncoder.encode(platform, "UTF-8") + "&genre=" + URLEncoder.encode(genre, "UTF-8") + "&owned=" + bought;
                     DBInsert addItem = new DBInsert(context, "insertItem.php", query, false);
                     addItem.execute();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-
-                //DBLoad loadItems = new DBLoad(context,"selectItem.php","?table=media");
-                //loadItems.execute();
-                //loadLists();
 
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -220,34 +199,18 @@ public class Media extends AppCompatActivity
     }
 
     private void loadLists() {
-        //        db.openOrCreateDatabase(FeedEntry.DATABASE_NAME,null);
-        //            if(db.isOpen()== false){
-        //    }
 
-        //Cursor haveCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEDIA_HAVE, null);
-        //MediaCursorAdapter mediaAdapterH = new MediaCursorAdapter(this, R.layout.media_item_view,haveCursor);
+        haveAdapter = new MediaAdapter(context, Global.mediaHaveArray);
+        wantAdapter = new MediaAdapter(context, Global.mediaWantArray);
 
-        //mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
-        //mediaHave.setAdapter(mediaAdapterH);
+        //list view stuff
+        final ListView lv1 = (ListView) findViewById(R.id.mediaHaveListView);
+        mediaHave = lv1;
+        final ListView lv2 = (ListView) findViewById(R.id.mediaWantListView);
+        mediaWant = lv2;
 
-        // if we want to change items in list view we do this
-        //mediaAdapterH.changeCursor(haveCursor);
-
-        //    Cursor wantCursor = db.rawQuery(FeedEntry.SQL_QUERY_ALL_MEDIA_WANT, null);
-        //    MediaCursorAdapter mediaAdapterW = new MediaCursorAdapter(this, R.layout.media_item_view,wantCursor);
-
-        //    mediaWant = (ListView)findViewById(R.id.mediaWantListView);
-        //    mediaWant.setAdapter(mediaAdapterW);
-
-        //    mediaAdapterW.changeCursor(wantCursor);
-
-        mediaHave = (ListView)findViewById(R.id.mediaHaveListView);
-
-        adapter = new ArrayAdapter<MediaItem>(this, android.R.layout.simple_list_item_1, Global.mediaHaveArray);
-        mediaHave.setAdapter(adapter);
-
-        DBLoad loadItems = new DBLoad(context, "selectItem.php", "?table=media",adapter);
-        loadItems.execute();
+        mediaHave.setAdapter(haveAdapter);
+        mediaWant.setAdapter(wantAdapter);
 
     }
 

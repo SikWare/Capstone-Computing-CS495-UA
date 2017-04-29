@@ -93,10 +93,10 @@ public class DBLoad extends AsyncTask<String, Void, String>{
     }
 
     public void convertToJSON(String result) {
-        if(result == null) { d(TAG, "no data receieved"); return; }
+        if(result == null) { d(TAG, "no data received"); return; }
 
-        List<MediaItem> tempHave = new ArrayList<MediaItem>();
-        List<MediaItem> tempWant = new ArrayList<MediaItem>();
+        ArrayList<MediaItem> tempHave = new ArrayList<MediaItem>();
+        ArrayList<MediaItem> tempWant = new ArrayList<MediaItem>();
 
 
         try {
@@ -115,14 +115,11 @@ public class DBLoad extends AsyncTask<String, Void, String>{
                 if(isBought == "1") { tempHave.add(item); }
                 else { tempWant.add(item); }
 
-                Global.mediaHaveArray = tempHave;
-                Global.mediaWantArray  = tempWant;
-
                 d("last item inserted",item.toString());
-                if (refAdapter != null) { refAdapter.notifyDataSetChanged();}
-
-
+                //if (refAdapter != null) { refAdapter.notifyDataSetChanged();}
             }
+            Global.mediaHaveArray = tempHave;
+            Global.mediaWantArray  = tempWant;
         }
         catch (JSONException jse) {
             jse.printStackTrace();
