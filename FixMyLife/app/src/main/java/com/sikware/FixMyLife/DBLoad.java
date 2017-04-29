@@ -39,14 +39,6 @@ public class DBLoad extends AsyncTask<String, Void, String>{
     private ArrayAdapter<MediaItem> refAdapter = null;
 
 
-
-    public DBLoad(Context context, String php, String query, ArrayAdapter adap) {
-        this.context = context;
-        this.php = php;
-        this.query = query;
-        this.refAdapter = adap;
-    }
-
     public DBLoad(Context context, String php, String query) {
         this.context = context;
         this.php = php;
@@ -111,9 +103,9 @@ public class DBLoad extends AsyncTask<String, Void, String>{
                 String genre =  jsonObject.getString("genre");
                 String isBought = jsonObject.getString("owned");
                 MediaItem item = new MediaItem(id, name, type, platform, genre, isBought);
-
-                if(isBought == "1") { tempHave.add(item); }
-                else { tempWant.add(item); }
+                Log.d("isBought: ",isBought);
+                if(isBought.equalsIgnoreCase("1")) { tempHave.add(item); Log.d(TAG,"Added to Have Array"); }
+                else { tempWant.add(item); Log.d(TAG,"Added to Want Array");}
 
                 d("last item inserted",item.toString());
                 //if (refAdapter != null) { refAdapter.notifyDataSetChanged();}

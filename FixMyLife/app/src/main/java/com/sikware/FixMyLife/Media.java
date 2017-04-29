@@ -80,6 +80,7 @@ public class Media extends AppCompatActivity
         @Override
     public void onResume() {
         super.onResume();
+
             haveAdapter.setListData(Global.mediaHaveArray);
             haveAdapter.notifyDataSetChanged();
             wantAdapter.setListData(Global.mediaWantArray);
@@ -90,6 +91,7 @@ public class Media extends AppCompatActivity
     @Override
     public void onPause() {
         super.onPause();
+        Global.mediaItem = null;
     }
 
     @Override
@@ -164,9 +166,6 @@ public class Media extends AppCompatActivity
                 String genre = ((EditText) a.findViewById(R.id.mediaGenreItem)).getText().toString();
                 String bought = ((RadioButton) a.findViewById(R.id.addMediaItemRadioHave)).isChecked() ? "1" : "0";
 
-                //mysql
-                //Will more than likely need to update to accomodate obj
-
                 UUID mediaID = UUID.randomUUID();
                 Global.mediaItem  = new MediaItem(mediaID, name, type, platform, genre, bought);
 
@@ -181,6 +180,11 @@ public class Media extends AppCompatActivity
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+
+                haveAdapter.setListData(Global.mediaHaveArray);
+                haveAdapter.notifyDataSetChanged();
+                wantAdapter.setListData(Global.mediaWantArray);
+                wantAdapter.notifyDataSetChanged();
 
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

@@ -27,6 +27,7 @@ class Global extends Application {
     static ArrayList<PantryItem> pantryHaveArray = new ArrayList<PantryItem>();
     static ArrayList<PantryItem> pantryWantArray = new ArrayList<PantryItem>();
     static ArrayList<NotesItem> notesArray = new ArrayList<NotesItem>();
+    static ArrayList<TaskItem> tasksArray = new ArrayList<TaskItem>();
 
     //strings for mySQL
     static final String INSERT_PHP = "insertItem.php";
@@ -34,6 +35,9 @@ class Global extends Application {
 
 
     static final String MEDIA_TABLE = "?table=media";
+    static final String PANTRY_TABLE = "?table=pantry";
+    static final String NOTES_TABLE = "?table=notes";
+    static final String TASKS_TABLE = "?table=tasks";
 
 
     // stuff for send bird
