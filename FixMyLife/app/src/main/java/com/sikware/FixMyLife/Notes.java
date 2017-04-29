@@ -1,5 +1,6 @@
 package com.sikware.FixMyLife;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,12 +23,19 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.UUID;
+
 public class Notes extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    Button addNotesBtn;
-    ListView notesHave, notesWant;
-    SQLiteDatabase db;
+    Button addNoteBtn, addTaskBtn;
+    ListView notesView, tasksView;
+    NotesAdapter notesAdapter;
+    TasksAdapter taskAdapter;
+
+    private static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +53,26 @@ public class Notes extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        addNotesBtn = (Button)findViewById(R.id.addNoteBtn);
-        addNotesBtn.setOnClickListener(new View.OnClickListener() {
+        Notes.context = getApplicationContext();
+
+        addNoteBtn = (Button)findViewById(R.id.addNoteBtn);
+        addNoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addItem(v);
+                addNote(v);
             }
         });
 
-        db = Global.mDbHelper.getWritableDatabase();
+        addTaskBtn = (Button)findViewById(R.id.addTaskBtn);
+        addTaskBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTask(v);
+            }
+        });
 
+        new DBLoad(this, Global.SELECT_PHP, Global.NOTES_TABLE,2).execute();
+        new DBLoad(this, Global.SELECT_PHP, Global.TASKS_TABLE,3).execute();
         loadLists();
 
     }
@@ -62,17 +80,17 @@ public class Notes extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
-        if(!db.isOpen()){
-            db = Global.mDbHelper.getWritableDatabase();
-        }
+        notesAdapter.setListData(Global.notesArray);
+        notesAdapter.notifyDataSetChanged();
+        taskAdapter.setListData(Global.tasksArray);
+        taskAdapter.notifyDataSetChanged();
 
     }
     @Override
     public void onPause(){
-        if(db.isOpen()){
-            db.close();
-        }
         super.onPause();
+        Global.notesItem = null;
+        Global.taskItem = null;
     }
 
 
@@ -133,35 +151,31 @@ public class Notes extends AppCompatActivity
         return true;
     }
 
-    void addItem(View view){
-        //todo double check layouts and shit
+    void addNote(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.add_notes_item_layout,null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
+        builder.setView(inflater.inflate(R.layout.add_notes_item_layout,null)).setPositiveButton("Add Note", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //send data back from dialog
-
-                // Gets the data repository in write mode
 
                 AlertDialog a = (AlertDialog) dialog;
-//                Context context = getApplicationContext();
                 String name = ((EditText)a.findViewById(R.id.notesNameItem)).getText().toString();
-                String dueDate = ((EditText)a.findViewById(R.id.notesDueDateItem)).getText().toString();
-                String pointVal = ((EditText)a.findViewById(R.id.notesPointValueItem)).getText().toString();
                 String details = ((EditText)a.findViewById(R.id.notesDetailsItem)).getText().toString();
-                boolean urgent = ((CheckBox)a.findViewById(R.id.urgentChkBx)).isChecked();
-                //NotesItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
-                Global.notesItem = new NotesItem(Global.getUser().groupID,name,dueDate,pointVal,details,urgent);
-                //after creating item we set to global to keep in memory
-                Log.d("item",Global.notesItem.toString());
+                UUID noteID = UUID.randomUUID();
+                Global.notesItem = new NotesItem(noteID,name,details);
 
-                // insert to db
-                //todo put the boolean back in(urgent messages are want);
-                //the boolean is what determines which db the item goes in
-                Global.mDbHelper.insertNotesItem(urgent,db);
+                Global.notesArray.add(Global.notesItem);
 
-                loadLists();
+                try {
+                    String query = "?table=notes&id=" + noteID.toString() + "&name=" + URLEncoder.encode(name, "UTF-8") + "&details=" + URLEncoder.encode(details, "UTF-8");
+                    DBInsert addItem = new DBInsert(context, "insertItem.php", query, false);
+                    addItem.execute();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                notesAdapter.setListData(Global.notesArray);
+                notesAdapter.notifyDataSetChanged();
 
             }
         }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -174,32 +188,68 @@ public class Notes extends AppCompatActivity
                 // we know we have canceled the window
                 //
             }
-        }).setTitle(R.string.addNew);
+        }).setTitle("Add Note");
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    void addTask(View view){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.add_task_layout,null)).setPositiveButton("Add Task", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                AlertDialog a = (AlertDialog) dialog;
+                String name = ((EditText)a.findViewById(R.id.taskName)).getText().toString();
+                String details = ((EditText)a.findViewById(R.id.taskDetails)).getText().toString();
+                String dueDate = ((EditText)a.findViewById(R.id.taskDueDate)).getText().toString();
+                UUID taskID = UUID.randomUUID();
+                Global.taskItem = new TaskItem(taskID,name,details,dueDate);
+
+                Global.tasksArray.add(Global.taskItem);
+
+                try {
+                    String query = "?table=tasks&id=" + taskID.toString() + "&name=" + URLEncoder.encode(name, "UTF-8") + "&details=" + URLEncoder.encode(details, "UTF-8")
+                            + "&dueDate=" + URLEncoder.encode(dueDate, "UTF-8");
+                    Log.d("TASK Insert", query);
+                    DBInsert addItem = new DBInsert(context, "insertItem.php", query, false);
+                    addItem.execute();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                taskAdapter.setListData(Global.tasksArray);
+                taskAdapter.notifyDataSetChanged();
+
+            }
+        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Global.taskItem = null;
+                dialog.cancel();
+                //
+                // if we cancel we clear global item so
+                // we know we have canceled the window
+                //
+            }
+        }).setTitle("Add Task");
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     private void loadLists(){
-        if(db.isOpen()== false){
-            db.openOrCreateDatabase(FeedReaderContract.FeedEntry.DATABASE_NAME,null);
-        }
+        notesAdapter = new NotesAdapter(context, Global.notesArray);
+        taskAdapter = new TasksAdapter(context, Global.tasksArray);
 
-        Cursor haveCursor = db.rawQuery(FeedReaderContract.FeedEntry.SQL_QUERY_ALL_NOTES_HAVE, null);
-        NotesCursorAdapter notesAdapterH = new NotesCursorAdapter(this, R.layout.notes_item_view,haveCursor);
+        //list view stuff
+        final ListView lv1 = (ListView) findViewById(R.id.notesView);
+        notesView = lv1;
+        final ListView lv2 = (ListView) findViewById(R.id.tasksView);
+        tasksView = lv2;
 
-        notesHave = (ListView)findViewById(R.id.notesHaveListView);
-        notesHave.setAdapter(notesAdapterH);
-
-        // if we want to change items in list view we do this
-        notesAdapterH.changeCursor(haveCursor);
-
-        Cursor wantCursor = db.rawQuery(FeedReaderContract.FeedEntry.SQL_QUERY_ALL_NOTES_WANT, null);
-        NotesCursorAdapter notesAdapterW = new NotesCursorAdapter(this, R.layout.notes_item_view,wantCursor);
-
-        notesWant = (ListView)findViewById(R.id.notesWantListView);
-        notesWant.setAdapter(notesAdapterW);
-
-        notesAdapterW.changeCursor(wantCursor);
+        notesView.setAdapter(notesAdapter);
+        tasksView.setAdapter(taskAdapter);
 
     }
 

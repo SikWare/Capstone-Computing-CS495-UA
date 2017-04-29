@@ -20,35 +20,6 @@
         />
 
     <TextView
-        android:id="@+id/textView13"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/dueDate"
-        />
-
-    <EditText
-        android:id="@+id/notesDueDateItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName" />
-
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/ptVal"
-        />
-
-    <EditText
-        android:id="@+id/notesPointValueItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        />
-
-    <TextView
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,15 +29,8 @@
     <EditText
         android:id="@+id/notesDetailsItem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        />
-
-    <CheckBox
-        android:id="@+id/urgentChkBx"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/urgetnQuestiom" />
+        android:inputType="textPersonName" />
 
 </LinearLayout>

@@ -11,27 +11,17 @@ class NotesItem {
 
     UUID id;
     UUID ownerID;
-    UUID assignedTo;
     String name;
     String details;
-    String dueDate;
-    String pointVal;
-    boolean urgent;
-    boolean completed;
-    boolean approved;
 
-    public NotesItem(UUID ownerID, String name, String dueDate, String pointVal, String details,boolean urgent) {
 
-        this.id = UUID.randomUUID();
-        this.ownerID = ownerID;
+    public NotesItem(UUID id, String name, String details) {
+
+        this.id = id;
+        //this.ownerID = ownerID;
         this.name = name;
         this.details = details;
-        this.dueDate = dueDate;
-        this.pointVal = pointVal;
-//        this.assignedTo = assignTo;
-        this.urgent = urgent;
-        this.completed = false;
-        this.approved = false;
+
     }
 
     public String toString(){

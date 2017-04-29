@@ -20,6 +20,19 @@
         />
 
     <TextView
+        android:id="@+id/textView15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/type" />
+
+    <EditText
+        android:id="@+id/pantryTypeItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
         android:id="@+id/textView13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,27 +54,11 @@
         />
 
     <EditText
-        android:id="@+id/pantyrUnitItem"
+        android:id="@+id/pantryUnitItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        />
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/type"
-        />
-
-    <EditText
-        android:id="@+id/pantryTypeItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        />
+        android:inputType="textPersonName" />
 
     <RadioGroup
         android:id="@+id/addItemRadioGroup"
@@ -76,7 +73,7 @@
             android:layout_weight="1"
             android:checked="true"
             android:text="@string/have_question"
-            tools:text="@string/have_question" />
+            tools:text="Purchased?" />
 
         <RadioButton
             android:id="@+id/addItemRadioWant"
@@ -85,7 +82,7 @@
             android:layout_weight="1"
             android:checked="false"
             android:text="@string/wish_question"
-            tools:text="@string/wish_question" />
+            tools:text="Shopping List?" />
     </RadioGroup>
 
 

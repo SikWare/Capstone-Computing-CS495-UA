@@ -6,11 +6,12 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.sikware.FixMyLife.Pantry"
-    tools:showIn="@layout/app_bar_pantry">
+    tools:showIn="@layout/app_bar_pantry"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="4dp"
         tools:layout_editor_absoluteX="8dp"
@@ -18,101 +19,122 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/havePantry"
-                android:layout_width="wrap_content"
+                android:id="@+id/pantryHave"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/have" />
+                android:text="Inventory:" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/platformTextH"
-                android:layout_width="wrap_content"
+                android:id="@+id/namePantryH"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="1"
-                android:text="@string/quantity" />
+                android:text="Name:" />
 
             <TextView
-                android:id="@+id/unitPantry"
-                android:layout_width="wrap_content"
+                android:id="@+id/typePantryH"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="43dp"
-                android:layout_marginStart="43dp"
-                android:layout_toRightOf="@+id/platformTextH"
                 android:layout_weight="1"
-                android:text="@string/unit" />
+                android:text="Type:" />
 
             <TextView
-                android:id="@+id/typePantry"
-                android:layout_width="wrap_content"
+                android:id="@+id/unitPantryH"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
                 android:layout_weight="1"
-                android:text="@string/type" />
+                android:text="Unit:" />
+
+            <TextView
+                android:id="@+id/qtyPantryH"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Qty:" />
         </LinearLayout>
 
         <ListView
             android:id="@+id/pantryHaveListView"
             style="@style/Widget.AppCompat.ListView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="190dp"
             android:background="@drawable/border" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="4dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/havePantry2"
-                android:layout_width="wrap_content"
+                android:id="@+id/PantryWantText"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/want" />
+                android:text="Shopping List:" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/typeTextW"
-                android:layout_width="wrap_content"
+                android:id="@+id/namePantryW"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:layout_weight="1"
-                android:text="@string/quantity" />
+                android:text="Name:" />
 
             <TextView
-                android:id="@+id/unitPantry2"
-                android:layout_width="wrap_content"
+                android:id="@+id/typePantryW"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="43dp"
-                android:layout_marginStart="43dp"
-                android:layout_toEndOf="@+id/typeTextW"
-                android:layout_toRightOf="@+id/typeTextW"
                 android:layout_weight="1"
-                android:text="@string/unit" />
+                android:text="Type:" />
 
             <TextView
-                android:id="@+id/typePantry2"
-                android:layout_width="wrap_content"
+                android:id="@+id/unitPantryW"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
                 android:layout_weight="1"
-                android:text="@string/type" />
+                android:text="Unit:" />
+
+            <TextView
+                android:id="@+id/qtyPantryW"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Qty:" />
         </LinearLayout>
 
         <ListView
             android:id="@+id/pantryWantListView"
             style="@style/Widget.AppCompat.ListView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="190dp"
             android:background="@drawable/border" />
 
         <RelativeLayout
@@ -129,4 +151,5 @@
         </RelativeLayout>
 
     </LinearLayout>
+
 </LinearLayout>

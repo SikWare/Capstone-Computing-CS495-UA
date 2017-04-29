@@ -23,12 +23,19 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.UUID;
+
 public class Pantry extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    Button addItemButton,scanItemButton;
+    Button addItemButton;
     ListView pantryHave, pantryWant;
-    SQLiteDatabase db;
+
+    private static Context context;
+    PantryAdapter haveAdapter;
+    PantryAdapter wantAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +53,8 @@ public class Pantry extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        Pantry.context = getApplicationContext();
 
-        //scanItemButton = (Button)findViewById(R.id.scanItemButton);
         addItemButton = (Button)findViewById(R.id.addItemBtn);
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,25 +63,23 @@ public class Pantry extends AppCompatActivity
             }
         });
 
-        db = Global.mDbHelper.getWritableDatabase();
-
+        new DBLoad(this,Global.SELECT_PHP,Global.PANTRY_TABLE,1).execute();
         loadLists();
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        if(!db.isOpen()){
-            db = Global.mDbHelper.getWritableDatabase();
-        }
+        haveAdapter.setListData(Global.pantryHaveArray);
+        haveAdapter.notifyDataSetChanged();
+        wantAdapter.setListData(Global.pantryWantArray);
+        wantAdapter.notifyDataSetChanged();
 
     }
     @Override
     public void onPause(){
-        if(db.isOpen()){
-            db.close();
-        }
         super.onPause();
+        Global.pantryItem = null;
     }
 
 
@@ -135,30 +140,46 @@ public class Pantry extends AppCompatActivity
         return true;
     }
 
-    void addItem(View view){
+    void addItem(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.add_pantry_item_layout,null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
+        builder.setView(inflater.inflate(R.layout.add_pantry_item_layout, null)).setPositiveButton(R.string.addNew, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //send data back from dialog
-                //todo test this!!!
-                //todo this is wrong layout files are messed up easy fix;;
+
                 AlertDialog a = (AlertDialog) dialog;
-                EditText Ename = (EditText)a.findViewById(R.id.pantryNameItem);
+                EditText Ename = (EditText) a.findViewById(R.id.pantryNameItem);
                 String name = Ename.getText().toString();
-                String type = ((EditText)a.findViewById(R.id.pantryTypeItem)).getText().toString();
-                String unit = ((EditText)a.findViewById(R.id.pantyrUnitItem)).getText().toString();
-                String quantity = ((EditText)a.findViewById(R.id.pantryQtyItem)).getText().toString();
-                boolean bought = ((RadioButton)a.findViewById(R.id.addPantryItemRadioHave)).isChecked()?true:false;
-                //PantryItem(UUID ownerID, String name, String type, String unit, String quantity, Boolean bought)
-                Global.pantryItem = new PantryItem(Global.getUser().groupID,name,type,unit,quantity,bought);
-                Log.d("item",Global.pantryItem.toString());
-                Global.mDbHelper.insertPantryItem(bought,db);
-                loadLists();
-//after creating item we set to global to keep in memory
+                String type = ((EditText) a.findViewById(R.id.pantryTypeItem)).getText().toString();
+                String unit = ((EditText) a.findViewById(R.id.pantryUnitItem)).getText().toString();
+                String quantity = ((EditText) a.findViewById(R.id.pantryQtyItem)).getText().toString();
+                String bought = ((RadioButton) a.findViewById(R.id.addPantryItemRadioHave)).isChecked() ? "1" : "0";
+
+                UUID pantryID = UUID.randomUUID();
+                Global.pantryItem = new PantryItem(pantryID, name, type, unit, quantity, bought);
+
+                if (bought == "1") {
+                    Global.pantryHaveArray.add(Global.pantryItem);
+                } else {
+                    Global.pantryWantArray.add(Global.pantryItem);
+                }
+
+                try {
+                    String query = "?table=pantry&id=" + pantryID.toString() + "&name=" + URLEncoder.encode(name, "UTF-8") + "&type=" + URLEncoder.encode(type, "UTF-8") +
+                            "&unit=" + URLEncoder.encode(unit, "UTF-8") + "&quantity=" + URLEncoder.encode(quantity, "UTF-8") + "&owned=" + bought;
+                    DBInsert addItem = new DBInsert(context, "insertItem.php", query, false);
+                    addItem.execute();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                haveAdapter.setListData(Global.pantryHaveArray);
+                haveAdapter.notifyDataSetChanged();
+                wantAdapter.setListData(Global.pantryWantArray);
+                wantAdapter.notifyDataSetChanged();
+
             }
-        }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Global.pantryItem = null;
@@ -168,34 +189,24 @@ public class Pantry extends AppCompatActivity
                 // we know we have canceled the window
                 //
             }
-        }).setTitle(R.string.addNew);
+        }).setTitle("Add New");
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     private void loadLists(){
-        if(db.isOpen()== false){
-            db.openOrCreateDatabase(FeedReaderContract.FeedEntry.DATABASE_NAME,null);
-        }
+        haveAdapter = new PantryAdapter(context, Global.pantryHaveArray);
+        wantAdapter = new PantryAdapter(context, Global.pantryWantArray);
 
-        Cursor haveCursor = db.rawQuery(FeedReaderContract.FeedEntry.SQL_QUERY_ALL_PANTRY_HAVE, null);
-        PantryCursorAdapter pantryAdapterH = new PantryCursorAdapter(this, R.layout.pantry_item_view,haveCursor);
+        //list view stuff
+        final ListView lv1 = (ListView) findViewById(R.id.pantryHaveListView);
+        pantryHave = lv1;
+        final ListView lv2 = (ListView) findViewById(R.id.pantryWantListView);
+        pantryWant = lv2;
 
-        pantryHave = (ListView)findViewById(R.id.pantryHaveListView);
-        pantryHave.setAdapter(pantryAdapterH);
-
-        // if we want to change items in list view we do this
-        pantryAdapterH.changeCursor(haveCursor);
-
-        Cursor wantCursor = db.rawQuery(FeedReaderContract.FeedEntry.SQL_QUERY_ALL_PANTRY_WANT, null);
-        PantryCursorAdapter pantryAdapterW = new PantryCursorAdapter(this, R.layout.pantry_item_view,wantCursor);
-
-        pantryWant = (ListView)findViewById(R.id.pantryWantListView);
-        pantryWant.setAdapter(pantryAdapterW);
-
-        pantryAdapterW.changeCursor(wantCursor);
+        pantryHave.setAdapter(haveAdapter);
+        pantryWant.setAdapter(wantAdapter);
 
     }
-
 
 }

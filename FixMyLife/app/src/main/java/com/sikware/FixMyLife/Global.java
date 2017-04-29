@@ -18,8 +18,8 @@ class Global extends Application {
     static PantryItem pantryItem = null;
     static MediaItem mediaItem = null;
     static NotesItem notesItem = null;
+    static TaskItem taskItem = null;
     static GoogleSignInAccount acct;
-    static DBHelper mDbHelper = null;
 
     //itemArrays
     static ArrayList<MediaItem> mediaHaveArray = new ArrayList<MediaItem>();

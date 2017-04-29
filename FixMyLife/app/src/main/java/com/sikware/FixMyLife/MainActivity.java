@@ -76,15 +76,6 @@ public class MainActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_OPENER = 20;
     CardView c1,c2,c3,c4,c5,c6;
-    private static final String TAG = "drive-quickstart";
-    private static final int REQUEST_CODE_CAPTURE_IMAGE = 1;
-    private static final int REQUEST_CODE_CREATOR = 2;
-    private static final int REQUEST_CODE_RESOLUTION = 3;
-
-    private GoogleApiClient mGoogleApiClient;
-    private Bitmap mBitmapToSave;
-    private DriveId mFileId;
-    //Global.sync = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,16 +136,27 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DBLoad loadItems = new DBLoad(this, Global.SELECT_PHP, Global.MEDIA_TABLE);
-        loadItems.execute();
-
+        DBLoad loadMedia = new DBLoad(this, Global.SELECT_PHP, Global.MEDIA_TABLE,0);
+        DBLoad loadPantry = new DBLoad(this, Global.SELECT_PHP, Global.PANTRY_TABLE,1);
+        DBLoad loadNotes = new DBLoad(this, Global.SELECT_PHP, Global.NOTES_TABLE,2);
+        DBLoad loadTasks = new DBLoad(this, Global.SELECT_PHP, Global.TASKS_TABLE,3);
+        loadMedia.execute();
+        loadPantry.execute();
+        loadNotes.execute();
+        loadTasks.execute();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        DBLoad loadItems = new DBLoad(this, "selectItem.php", "?table=media");
-        loadItems.execute();
+        DBLoad loadMedia = new DBLoad(this, Global.SELECT_PHP, Global.MEDIA_TABLE,0);
+        DBLoad loadPantry = new DBLoad(this, Global.SELECT_PHP, Global.PANTRY_TABLE,1);
+        DBLoad loadNotes = new DBLoad(this, Global.SELECT_PHP, Global.NOTES_TABLE,2);
+        DBLoad loadTasks = new DBLoad(this, Global.SELECT_PHP, Global.TASKS_TABLE,3);
+        loadMedia.execute();
+        loadPantry.execute();
+        loadNotes.execute();
+        loadTasks.execute();
     }
 
     @Override

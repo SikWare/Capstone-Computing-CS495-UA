@@ -24,12 +24,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
-
-import com.sikware.FixMyLife.FeedReaderContract.FeedEntry;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.UUID;
 
 
@@ -73,7 +69,7 @@ public class Media extends AppCompatActivity
             }
         });
 
-        new DBLoad(this, Global.SELECT_PHP, Global.MEDIA_TABLE).execute();
+        new DBLoad(this, Global.SELECT_PHP, Global.MEDIA_TABLE,0).execute();
         loadLists();
     }
 

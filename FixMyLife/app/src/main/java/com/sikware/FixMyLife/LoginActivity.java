@@ -37,8 +37,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
     SignInButton signInButton;
-    protected DriveId mDriveId;
-    final String DRIVE_ID_FILE = "DRIVE_ID_FILE";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, this)
-//                .addApi(Drive.API)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
         signInButton = (SignInButton)findViewById(R.id.sign_in_button);
@@ -61,30 +59,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             }
         });
 
-        String driveId = getPreferences(Context.MODE_PRIVATE).getString(DRIVE_ID_FILE, null);
-
-        if (driveId != null) {
-            mDriveId = DriveId.decodeFromString(driveId);
-
-
-        CloudProvider gDriveProvider = new GDriveCloudProvider.Builder(this.getBaseContext())
-                .setSyncFileByDriveId(mDriveId)
-                .setGoogleApiClient(mGoogleApiClient)
-                .build();
-
-        DBSync  dbSync = new DBSync.Builder(this.getBaseContext())
-                .setCloudProvider(gDriveProvider)
-                .setSQLiteDatabase(Global.mDbHelper.getReadableDatabase())
-                .setDataBaseName(Global.mDbHelper.getDatabaseName())
-                .addTable(new TableToSync.Builder("name").build())
-                .build();
-        dbSync.sync();
-
-        }
-
-        //Intent intent = new Intent(this,SendBirdMainActivity.class);
-        //startActivity(intent);
-        //finish();
     }
 
     private void signIn(){
@@ -111,33 +85,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private void handleSignInResult(GoogleSignInResult result, Intent data){
         Log.d(TAG, "handleSignInResult: " + result.isSuccess());
-        mDriveId = data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
         if(result.isSuccess()) {
             //todo launch activity if .isSuccess()
             acct = result.getSignInAccount();
             Log.d(TAG, "Name: " + acct.getDisplayName());
             Log.d(TAG, "Email: " + acct.getEmail());
-            String driveId = DRIVE_ID_FILE;
-            mDriveId = data.getParcelableExtra(OpenFileActivityBuilder.EXTRA_RESPONSE_DRIVE_ID);
-            if (mDriveId != null) {
-                mDriveId = DriveId.decodeFromString(driveId);
-
-
-                CloudProvider gDriveProvider = new GDriveCloudProvider.Builder(this.getBaseContext())
-                        .setSyncFileByDriveId(mDriveId)
-                        .setGoogleApiClient(mGoogleApiClient)
-                        .build();
-
-                DBSync  dbSync = new DBSync.Builder(this.getBaseContext())
-                        .setCloudProvider(gDriveProvider)
-                        .setSQLiteDatabase(Global.mDbHelper.getReadableDatabase())
-                        .setDataBaseName(Global.mDbHelper.getDatabaseName())
-                        .addTable(new TableToSync.Builder("name").build())
-                        .build();
-                dbSync.sync();
-
-            }
-            //updateUI(true);
             }// todo move to bottom when finished
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

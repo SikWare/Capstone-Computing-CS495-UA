@@ -1,7 +1,3 @@
-/**
- * Created by root on 4/28/17.
- */
-
 package com.sikware.FixMyLife;
 
 /**
